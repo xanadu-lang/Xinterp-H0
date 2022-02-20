@@ -162,6 +162,19 @@ val-H0Estr(tok) = h0e0.node()
 
 (* ****** ****** *)
 
+fun
+auxtop
+( h0e0
+: h0exp): irval =
+(
+  IRVtop( h0e0.type() )
+) where
+{
+val-H0Etop(tok) = h0e0.node()
+} (* end of [auxtop] *)
+
+(* ****** ****** *)
+
 in(*in-of-local*)
 
 (* ****** ****** *)
@@ -181,6 +194,8 @@ h0e0.node() of
 | H0Echr _ => auxchr(h0e0)
 | H0Eflt _ => auxflt(h0e0)
 | H0Estr _ => auxstr(h0e0)
+//
+| H0Etop _ => auxtop(h0e0)
 //
 |
 _(*rest-of-h0exp*) => IRVnone1(h0e0)
