@@ -32,5 +32,52 @@
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
+#staload
+"./../SATS/xinterp.sats"
+(* ****** ****** *)
+#include
+"./../HATS/libxatsopt.hats"
+(* ****** ****** *)
+//
+implement
+fprint_val<irval> = fprint_irval
+//
+(* ****** ****** *)
+//
+implement
+print_irval(x0) = 
+fprint_irval(stdout_ref, x0)
+implement
+prerr_irval(x0) = 
+fprint_irval(stderr_ref, x0)
+//
+(* ****** ****** *)
+
+implement
+fprint_irval(out, x0) =
+(
+case+ x0 of
+//
+| IRVnil() =>
+  fprint!(out, "IRVnil()")
+//
+| IRVint(i0) =>
+  fprint!(out, "IRVint(", i0, ")")
+| IRVptr(p0) =>
+  fprint!(out, "IRVptr(", p0, ")")
+//
+| IRVbtf(b0) =>
+  fprint!(out, "IRVbtf(", b0, ")")
+| IRVchr(c0) =>
+  fprint!(out, "IRVchr(", c0, ")")
+//
+| IRVflt(f0) =>
+  fprint!(out, "IRVflt(", f0, ")")
+| IRVstr(s0) =>
+  fprint!(out, "IRVstr(", s0, ")")
+//
+) (*case*) // end of [fprint_irval]
+
+(* ****** ****** *)
 
 (* end of [xint_xinterp_print.dats] *)

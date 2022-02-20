@@ -47,6 +47,9 @@ UN =
 //
 (* ****** ****** *)
 //
+#staload
+"{$XATSOPT}/SATS/intrep0.sats"
+//
 #staload "./../SATS/xinterp.sats"
 //
 (* ****** ****** *)
@@ -54,6 +57,17 @@ UN =
 implement
 fprint_val<irval> = fprint_irval
 //
+(* ****** ****** *)
+
+extern
+fun
+xinterp_h0exp
+(env0: irenv, h0e0: h0exp): irval
+extern
+fun
+xinterp_h0explst
+(env0: irenv, h0es: h0explst): irvalist
+
 (* ****** ****** *)
 
 (* end of [xint_xinterp_dynexp.dats] *)
