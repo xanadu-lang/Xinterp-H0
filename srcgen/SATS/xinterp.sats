@@ -80,6 +80,9 @@ datatype irval =
 | IRVflt of double
 | IRVstr of string
 //
+| IRVnone0 of ()
+| IRVnone1 of (h0exp)
+//
 and
 irlazval =
 | IRLVval of irval(*value*)

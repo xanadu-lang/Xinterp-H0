@@ -32,11 +32,14 @@
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
-#staload
-"./../SATS/xinterp.sats"
-(* ****** ****** *)
 #include
 "./../HATS/libxatsopt.hats"
+(* ****** ****** *)
+//
+#staload
+"{$XATSOPT}/SATS/intrep0.sats"
+//
+#staload "./../SATS/xinterp.sats"
 (* ****** ****** *)
 //
 implement
@@ -75,6 +78,11 @@ case+ x0 of
   fprint!(out, "IRVflt(", f0, ")")
 | IRVstr(s0) =>
   fprint!(out, "IRVstr(", s0, ")")
+//
+| IRVnone0() =>
+  fprint!(out, "IRVnone0(", ")")
+| IRVnone1(h0e1) =>
+  fprint!(out, "IRVnone1(", h0e1, ")")
 //
 ) (*case*) // end of [fprint_irval]
 

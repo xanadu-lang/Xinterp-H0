@@ -62,11 +62,137 @@ fprint_val<irval> = fprint_irval
 extern
 fun
 xinterp_h0exp
-(env0: irenv, h0e0: h0exp): irval
+( env0
+: irenv, h0e0: h0exp): irval
 extern
 fun
 xinterp_h0explst
-(env0: irenv, h0es: h0explst): irvalist
+( env0
+: irenv, h0es: h0explst): irvalist
+
+(* ****** ****** *)
+
+local
+
+(* ****** ****** *)
+
+fun
+auxi00
+( h0e0
+: h0exp): irval =
+IRVint(int) where
+{
+val-
+H0Ei00(int) = h0e0.node()
+} (* end of [auxi00] *)
+
+fun
+auxs00
+( h0e0
+: h0exp): irval =
+IRVstr(str) where
+{
+val-
+H0Es00(str) = h0e0.node()
+} (* end of [auxs00] *)
+
+(* ****** ****** *)
+
+fun
+auxint
+( h0e0
+: h0exp): irval =
+(
+IRVint(token2dint(tok))
+) where
+{
+val-
+H0Eint(tok) = h0e0.node()
+} (* end of [auxint] *)
+
+(* ****** ****** *)
+
+fun
+auxbtf
+( h0e0
+: h0exp): irval =
+(
+IRVbtf(token2dbtf(tok))
+) where
+{
+val-H0Ebtf(tok) = h0e0.node()
+} (* end of [auxbtf] *)
+
+(* ****** ****** *)
+
+fun
+auxchr
+( h0e0
+: h0exp): irval =
+(
+IRVchr(token2dchr(tok))
+) where
+{
+val-H0Echr(tok) = h0e0.node()
+} (* end of [auxchr] *)
+
+(* ****** ****** *)
+
+fun
+auxflt
+( h0e0
+: h0exp): irval =
+(
+IRVflt(token2dflt(tok))
+) where
+{
+val-H0Eflt(tok) = h0e0.node()
+} (* end of [auxflt] *)
+
+fun
+auxstr
+( h0e0
+: h0exp): irval =
+(
+IRVstr(token2dstr(tok))
+) where
+{
+val-H0Estr(tok) = h0e0.node()
+} (* end of [auxstr] *)
+
+(* ****** ****** *)
+
+in(*in-of-local*)
+
+(* ****** ****** *)
+//
+implement
+xinterp_h0exp
+(env0, h0e0) =
+(
+case+
+h0e0.node() of
+//
+| H0Ei00 _ => auxi00(h0e0)
+| H0Es00 _ => auxs00(h0e0)
+//
+| H0Eint _ => auxint(h0e0)
+| H0Ebtf _ => auxbtf(h0e0)
+| H0Echr _ => auxchr(h0e0)
+| H0Eflt _ => auxflt(h0e0)
+| H0Estr _ => auxstr(h0e0)
+//
+|
+_(*rest-of-h0exp*) => IRVnone1(h0e0)
+) where
+{
+val () =
+println!("xinterp_h0exp: h0e0 = ", h0e0)
+} (*where*) // end of [xinterp_h0exp]
+//
+(* ****** ****** *)
+
+end // end of [local]
 
 (* ****** ****** *)
 
