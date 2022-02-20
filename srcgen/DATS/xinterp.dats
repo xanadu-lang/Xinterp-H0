@@ -33,78 +33,62 @@
 //
 (* ****** ****** *)
 //
-#define
-XATSOPT_targetloc
-"./../../xatsopt/srcgen/xats"
-//
-(* ****** ****** *)
-
+#include
+"share\
+/atspre_staload.hats"
 #staload
-LAB =
-"{$XATSOPT}/SATS/xlabel0.sats"
+UN =
+"prelude/SATS/unsafe.sats"
+//
+(* ****** ****** *)
+//
+#include
+"./../HATS/libxinterp.hats"
+//
+(* ****** ****** *)
+//
 #staload
-D2E =
-"{$XATSOPT}/SATS/dynexp2.sats"
-
-(* ****** ****** *)
-#staload
-// H0E = // HX: opened
-"{$XATSOPT}/SATS/intrep0.sats"
-(* ****** ****** *)
-
-typedef label = $LAB.label
-
-(* ****** ****** *)
-
-typedef d2var = $D2E.d2var
-typedef d2con = $D2E.d2con
-typedef d2cst = $D2E.d2cst
-
-(* ****** ****** *)
-
-abstype irenv_tbox = ptr
-typedef irenv = irenv_tbox
-
-(* ****** ****** *)
-//
-datatype irval =
-//
-| IRVnil of ()
-//
-| IRVint of int
-| IRVptr of ptr
-//
-| IRVbtf of bool
-| IRVchr of char
-//
-| IRVflt of double
-| IRVstr of string
-//
-and
-irlazval =
-| IRLVval of irval(*value*)
-| IRLVexp of (irenv, h0exp) // thunk
-//
-where
-//
-irvalist = List0(irval)
-and
-irvalopt = Option(irval)
-and
-irvalfun = (irvalist -<cloref1> irval)
+"./../SATS/xinterp.sats"
 //
 (* ****** ****** *)
-//
-fun
-the_XATSHOME_get((*void*)): string
-//
+#dynload
+"./../DATS/xinterp_main0.dats"
 (* ****** ****** *)
 //
-fun
-xinterp_main0
-{n:int | n >= 1}
-(argc: int(n), argv: !argv(n)): void
+implement
+main0(argc, argv) =
+(
+//
+if
+(argc >= 2)
+then
+(
+xinterp_main0(argc, argv)
+)
+else
+{
+val () =
+prerrln!
+("Hello from ATS3(xinterp)!")
+//
+val
+XATSHOME = the_XATSHOME_get()
+val
+((*void*)) =
+prerrln!
+("xinterp: XATSHOME=",XATSHOME)
+//
+} (* else *) // end of [if]
+) where
+{
+// (*
+// (*
+val out = stderr_ref
+val ( ) =
+$XATSOPT.echo_argc_argv(out, argc, argv)
+// *)
+} (* end of [main0] *)
 //
 (* ****** ****** *)
 
-(* end of [xint_xinterp.sats] *)
+(* end of [xint_xinterp.dats] *)
