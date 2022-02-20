@@ -32,18 +32,50 @@
 // Authoremail: gmhwxiATgmailDOTcom
 //
 (* ****** ****** *)
+//
+#include
+"share\
+/atspre_staload.hats"
+#staload
+UN =
+"prelude/SATS/unsafe.sats"
+//
+(* ****** ****** *)
 #include
 "./../HATS/libxatsopt.hats"
 (* ****** ****** *)
 //
 #staload
 "{$XATSOPT}/SATS/intrep0.sats"
+#staload
+"{$XATSOPT}/DATS/intrep0.dats"
+//
+(* ****** ****** *)
 //
 #staload "./../SATS/xinterp.sats"
+//
 (* ****** ****** *)
 //
 implement
 fprint_val<irval> = fprint_irval
+//
+(* ****** ****** *)
+//
+implement
+fprint_val<hdcst> = fprint_hdcst
+implement
+fprint_val<hdcon> = fprint_hdcon
+implement
+fprint_val<hdvar> = fprint_hdvar
+//
+(* ****** ****** *)
+//
+implement
+fprint_val<h0pat> = fprint_h0pat
+implement
+fprint_val<h0exp> = fprint_h0exp
+implement
+fprint_val<hfarg> = fprint_hfarg
 //
 (* ****** ****** *)
 //
@@ -79,10 +111,31 @@ case+ x0 of
 | IRVstr(s0) =>
   fprint!(out, "IRVstr(", s0, ")")
 //
-| IRVnone0() =>
+| IRVtop(tok) =>
+  fprint!(out, "IRVtop(", tok, ")")
+//
+|
+IRVlam(_, args, h0e1) =>
+fprint!
+( out
+, "IRVlam(", args, "; ", h0e1, ")")
+|
+IRVfix(_, hdv0, args, h0e1) =>
+fprint!
+( out
+, "IRVfix("
+, hdv0, "; ", args, "; ", h0e1, ")")
+//
+|
+IRVnone0() =>
+(
   fprint!(out, "IRVnone0(", ")")
-| IRVnone1(h0e1) =>
+)
+|
+IRVnone1(h0e1) =>
+(
   fprint!(out, "IRVnone1(", h0e1, ")")
+)
 //
 ) (*case*) // end of [fprint_irval]
 
