@@ -42,57 +42,18 @@ UN =
 //
 (* ****** ****** *)
 //
-#staload
-"./../SATS/xinterp.sats"
-//
-(* ****** ****** *)
-//
 #include
-"./../HATS/libxinterp.hats"
+"./../HATS/libxatsopt.hats"
 //
 (* ****** ****** *)
-#dynload
-"./../DATS/xinterp_main0.dats"
-#dynload
-"./../DATS/xinterp_envmap.dats"
-#dynload
-"./../DATS/xinterp_dynexp.dats"
+//
+#staload "./../SATS/xinterp.sats"
+//
 (* ****** ****** *)
 //
 implement
-main0(argc, argv) =
-(
-//
-if
-(argc >= 2)
-then
-(
-xinterp_main0(argc, argv)
-)
-else
-{
-val () =
-prerrln!
-("Hello from ATS3(xinterp)!")
-//
-val
-XATSHOME = the_XATSHOME_get()
-val
-((*void*)) =
-prerrln!
-("xinterp: XATSHOME=",XATSHOME)
-//
-} (* else *) // end of [if]
-) where
-{
-// (*
-// (*
-val out = stderr_ref
-val ( ) =
-$XATSOPT.echo_argc_argv(out, argc, argv)
-// *)
-} (* end of [main0] *)
+fprint_val<irval> = fprint_irval
 //
 (* ****** ****** *)
 
-(* end of [xint_xinterp.dats] *)
+(* end of [xint_xinterp_dynexp.dats] *)

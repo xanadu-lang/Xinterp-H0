@@ -91,7 +91,26 @@ irvalist = List0(irval)
 and
 irvalopt = Option(irval)
 and
-irvalfun = (irvalist -<cloref1> irval)
+irvalfun =
+(irvalist -<cloref1> irval)
+//
+(* ****** ****** *)
+//
+fun
+print_irval: print_type(irval)
+fun
+prerr_irval: prerr_type(irval)
+fun
+fprint_irval: fprint_type(irval)
+//
+overload print with print_irval
+overload prerr with prerr_irval
+overload fprint with fprint_irval
+//
+(* ****** ****** *)
+//
+fun
+xinterp_program(h0dclist): void
 //
 (* ****** ****** *)
 //

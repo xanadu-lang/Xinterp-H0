@@ -36,63 +36,18 @@
 #include
 "share\
 /atspre_staload.hats"
-#staload
-UN =
-"prelude/SATS/unsafe.sats"
-//
-(* ****** ****** *)
-//
-#staload
-"./../SATS/xinterp.sats"
-//
-(* ****** ****** *)
-//
 #include
-"./../HATS/libxinterp.hats"
+"share\
+/atspre_staload_libats_ML.hats"
+#staload
+UN = "prelude/SATS/unsafe.sats"
 //
 (* ****** ****** *)
-#dynload
-"./../DATS/xinterp_main0.dats"
-#dynload
-"./../DATS/xinterp_envmap.dats"
-#dynload
-"./../DATS/xinterp_dynexp.dats"
-(* ****** ****** *)
 //
-implement
-main0(argc, argv) =
-(
-//
-if
-(argc >= 2)
-then
-(
-xinterp_main0(argc, argv)
-)
-else
-{
-val () =
-prerrln!
-("Hello from ATS3(xinterp)!")
-//
-val
-XATSHOME = the_XATSHOME_get()
-val
-((*void*)) =
-prerrln!
-("xinterp: XATSHOME=",XATSHOME)
-//
-} (* else *) // end of [if]
-) where
-{
-// (*
-// (*
-val out = stderr_ref
-val ( ) =
-$XATSOPT.echo_argc_argv(out, argc, argv)
-// *)
-} (* end of [main0] *)
+#define
+XATSOPT_targetloc
+"./../../xatsopt/srcgen/xats"
 //
 (* ****** ****** *)
 
-(* end of [xint_xinterp.dats] *)
+(* end of [xint_xinterp_envmap.dats] *)
