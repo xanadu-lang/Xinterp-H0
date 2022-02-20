@@ -43,6 +43,7 @@ xinterp.sats \
 
 SRCDATS := \
 xinterp_main0.dats \
+xinterp_print.dats \
 xinterp_envmap.dats \
 xinterp_dynexp.dats \
 
