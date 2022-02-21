@@ -38,28 +38,37 @@ XATSOPT_targetloc
 "./../../xatsopt/srcgen/xats"
 //
 (* ****** ****** *)
-
+//
 #staload
 LAB =
 "{$XATSOPT}/SATS/xlabel0.sats"
-#staload
-D2E =
-"{$XATSOPT}/SATS/dynexp2.sats"
-
 (* ****** ****** *)
 #staload
-// H0E = // HX: opened
+H0E =
 "{$XATSOPT}/SATS/intrep0.sats"
 (* ****** ****** *)
-
 typedef label = $LAB.label
-
 (* ****** ****** *)
-
-typedef d2var = $D2E.d2var
-typedef d2con = $D2E.d2con
-typedef d2cst = $D2E.d2cst
-
+//
+typedef h0typ = $H0E.h0typ
+//
+(* ****** ****** *)
+//
+typedef hdcon = $H0E.hdcon
+typedef hdcst = $H0E.hdcst
+typedef hdvar = $H0E.hdvar
+//
+typedef h0pat = $H0E.h0pat
+typedef h0patlst = $H0E.h0patlst
+typedef hfarg = $H0E.hfarg
+typedef hfarglst = $H0E.hfarglst
+//
+typedef h0exp = $H0E.h0exp
+typedef h0explst = $H0E.h0explst
+typedef h0dcl = $H0E.h0dcl
+typedef h0dclist = $H0E.h0dclist
+//
+typedef h0comped = $H0E.h0comped
 (* ****** ****** *)
 
 abstype irenv_tbox = ptr
@@ -138,8 +147,41 @@ overload fprint with fprint_irval
 (* ****** ****** *)
 //
 fun
-xinterp_program(h0dclist): void
+xinterp_program
+  (p0kg: h0comped): void
 //
+(* ****** ****** *)
+absvtype intenv_vtbox = ptr
+vtypedef intenv = intenv_vtbox
+(* ****** ****** *)
+fun
+irenv_make_nil(): irenv
+fun
+intenv_make_nil(): intenv
+fun
+intenv_free_nil(intenv): void
+//
+(* ****** ****** *)
+//
+fun
+xinterp_h0dcl
+( env0:
+! intenv, dcl0: h0dcl): void
+fun
+xinterp_h0dclist
+( env0:
+! intenv, dcls: h0dclist): void
+//
+(* ****** ****** *)
+fun
+intenv_make_irenv(irenv): intenv
+(* ****** ****** *)
+//
+(*
+HX: copying out the stack
+*)
+fun
+intenv_take_irenv(!intenv): irenv
 (* ****** ****** *)
 //
 fun

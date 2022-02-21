@@ -789,49 +789,29 @@ val
 p3kg = trans03_package(p0kg)
 //
 // HX: for type-errors
-val () = $TRD33.tread33_package(p3kg)
+val () = 
+$TRD33.tread33_package(p3kg)
 // HX: for timp-errors
-val () = $TRD3X.tread3x_package(p3kg)
+val () =
+$TRD3X.tread3x_package(p3kg)
 //
 } (*where*) // end of [auxmain]
 }
 //
 (* ****** ****** *)
 //
-(*
-val
-l1pkg =
-let
-  val
-  l1pkg =
-  xcomp01_package(h0pkg)
-in
-l1pkg where
-{
-//
-val () =
-let
-val out =
-outchan_get_filref
-(st0.outchan)
-in
-  xemit01_package(out, l1pkg)
-end // end of [let]
-//
-} // end of [where]
-//
-end // end of [val l1pkg]
-*)
+val () = xinterp_program(h0pkg)
 //
 (* ****** ****** *)
 //
-} (* end of [then] *)
-else
+} (*then*) else
 {
-// ~(stadyn >= 0) // not for loading code
-} (* end of [else] *)
+// stadyn < 0:
+// no code is loaded
+// neither static nor dynamic
+} (*else*) //end-of-[if(stadyn >= 0)]
 //
-end // end of [process_fpath]
+end (*let*) // end of [process_fpath]
 
 (* ****** ****** *)
 

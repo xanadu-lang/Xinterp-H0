@@ -58,6 +58,19 @@ implement
 fprint_val<irval> = fprint_irval
 //
 (* ****** ****** *)
+
+extern
+fun
+xinterp_h0exp
+( env0:
+! intenv, h0e0: h0exp): irval
+extern
+fun
+xinterp_h0explst
+( env0:
+! intenv, h0es: h0explst): irvalist
+
+(* ****** ****** *)
 //
 extern
 fun
@@ -72,12 +85,14 @@ xinterp_h0patlst_ck0
 extern
 fun
 xinterp_h0pat_ck1
-( env0: irenv
+( env0:
+! intenv
 , h0p0: h0pat, irv1: irval): void
 extern
 fun
 xinterp_h0patlst_ck1
-( env0: irenv
+( env0:
+! intenv
 , h0ps
 : h0patlst, irv1: irvalist): void
 //
@@ -85,14 +100,36 @@ xinterp_h0patlst_ck1
 
 extern
 fun
-xinterp_h0exp
-( env0
-: irenv, h0e0: h0exp): irval
-extern
-fun
-xinterp_h0explst
-( env0
-: irenv, h0es: h0explst): irvalist
+xinterp_initize(): void
+
+(* ****** ****** *)
+
+implement
+xinterp_program
+  (p0kg) =
+let
+//
+val () =
+xinterp_initize()
+//
+val
+env0 =
+intenv_make_nil()
+//
+local
+val+
+H0COMPED(rcd0) = p0kg
+val-Some(dcls) = rcd0.comped
+in
+val () =
+xinterp_h0dclist(env0, dcls)
+end // end of [local]
+//
+val () = intenv_free_nil(env0)
+//
+in
+  // nothing
+end // end of [xinterp_program]
 
 (* ****** ****** *)
 
@@ -201,26 +238,27 @@ val-H0Etop(tok) = h0e0.node()
 
 fun
 auxlam
-( env0
-: irenv
-, h0e0
-: h0exp): irval =
+( env0:
+! intenv
+, h0e0: h0exp): irval =
 let
 val-
 H0Elam
 ( knd0
 , args
 , body ) = h0e0.node()
+val
+fenv =
+intenv_take_irenv(env0)
 in
-  IRVlam1(env0, args, body)
+  IRVlam1(fenv, args, body)
 end
 
 fun
 auxfix
-( env0
-: irenv
-, h0e0
-: h0exp): irval =
+( env0:
+! intenv
+, h0e0: h0exp): irval =
 let
 val-
 H0Efix
@@ -228,16 +266,19 @@ H0Efix
 , nam1
 , args
 , body ) = h0e0.node()
+val
+fenv =
+intenv_take_irenv(env0)
 in
-IRVfix1(env0, nam1, args, body)
+IRVfix1(fenv, nam1, args, body)
 end
 
 (* ****** ****** *)
 
 fun
 auxift1
-( env0
-: irenv
+( env0:
+! intenv
 , h0e0: h0exp): irval =
 let
 val-
@@ -273,8 +314,8 @@ end (*let*) // end of [auxif1]
 
 fun
 auxtrcd1
-( env0
-: irenv
+( env0:
+! intenv
 , h0e0: h0exp): irval =
 let
 val-
@@ -285,8 +326,8 @@ H0Etrcd1
 //
 fun
 auxlst
-( env0
-: irenv
+( env0:
+! intenv
 , npf1: int
 , h0es
 : h0explst): irvalist =
@@ -435,8 +476,10 @@ case- irv0 of
 |
 IRVtrcd1(knd1, irvs) =>
 let
+//
 val () =
 assertloc(knd0=knd1)
+//
 val h0ps =
 (
   auxtail(npf1, h0ps)
