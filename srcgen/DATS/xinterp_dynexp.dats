@@ -58,6 +58,30 @@ implement
 fprint_val<irval> = fprint_irval
 //
 (* ****** ****** *)
+//
+extern
+fun
+xinterp_h0pat_ck0
+(h0p0: h0pat, irv1: irval): bool
+extern
+fun
+xinterp_h0patlst_ck0
+( h0p0
+: h0patlst, irv1: irvalist): bool
+//
+extern
+fun
+xinterp_h0pat_ck1
+( env0: irenv
+, h0p0: h0pat, irv1: irval): void
+extern
+fun
+xinterp_h0patlst_ck1
+( env0: irenv
+, h0ps
+: h0patlst, irv1: irvalist): void
+//
+(* ****** ****** *)
 
 extern
 fun
@@ -343,6 +367,165 @@ println!("xinterp_h0exp: h0e0 = ", h0e0)
 (* ****** ****** *)
 
 end // end of [local]
+
+(* ****** ****** *)
+
+implement
+xinterp_h0pat_ck0
+  (h0p0, irv0) =
+let
+//
+(*
+val () =
+println!
+("xinterp_h0pat_ck0: h0p0 = ", h0p0)
+val () =
+println!
+("xinterp_h0pat_ck0: irv0 = ", irv0)
+*)
+//
+in
+//
+case-
+h0p0.node() of
+//
+|
+H0Pany _ => true
+|
+H0Pvar _ => true
+//
+|
+H0Pint(int1) =>
+(
+case- irv0 of
+|
+IRVint(int0) =>
+( int0=int1 ) where
+{
+val int1=token2dint(int1)
+}
+)
+|
+H0Pbtf(btf1) =>
+(
+case- irv0 of
+|
+IRVbtf(btf0) =>
+( btf0=btf1 ) where
+{
+val btf1=token2dbtf(btf1)
+}
+)
+|
+H0Pchr(chr1) =>
+(
+case- irv0 of
+|
+IRVchr(chr0) =>
+( chr0=chr1 ) where
+{
+val chr1=token2dchr(chr1)
+}
+)
+|
+H0Ptrcd1
+(knd0, npf1, h0ps) =>
+(
+case- irv0 of
+|
+IRVtrcd1(knd1, irvs) =>
+let
+val () =
+assertloc(knd0=knd1)
+val h0ps =
+(
+  auxtail(npf1, h0ps)
+) where
+{
+fun
+auxtail
+( npf1: int
+, h0ps
+: h0patlst): h0patlst =
+if
+npf1 <= 0
+then h0ps else
+(
+case- h0ps of
+| list_cons
+  (_, h0ps) =>
+  auxtail(npf1-1, h0ps)
+)
+} (*where*) // end-of-val
+in
+xinterp_h0patlst_ck0(h0ps, irvs)
+end
+) (* end of [H0Ptrcd1] *)
+//
+end (*end*) // end of [xinterp_h0pat_ck0]
+
+(* ****** ****** *)
+implement
+xinterp_h0patlst_ck0
+  (h0ps, irvs) =
+(
+case+ h0ps of
+|
+list_nil() => true
+|
+list_cons(h0p0, h0ps) =>
+let
+val-
+list_cons(irv0, irvs) = irvs
+val ans =
+xinterp_h0pat_ck0(h0p0, irv0)  
+in(*in-of-let*)
+//
+if ans
+then xinterp_h0patlst_ck0(h0ps, irvs)
+else false
+//
+end // end of [list_cons]
+) (*case*)//end of [xinterp_h0patlst_ck0]
+(* ****** ****** *)
+
+implement
+xinterp_h0pat_ck1
+(env0, h0p0, irv0) =
+let
+//
+(*
+val () =
+println!
+("xinterp_h0pat_ck0: h0p0 = ", h0p0)
+val () =
+println!
+("xinterp_h0pat_ck0: irv0 = ", irv0)
+*)
+//
+in
+end (*end*) // end of [xinterp_h0pat_ck1]
+
+(* ****** ****** *)
+
+implement
+xinterp_h0patlst_ck1
+  (env0, h0ps, irvs) =
+(
+case+ h0ps of
+|
+list_nil() => ()
+|
+list_cons(h0p0, h0ps) =>
+let
+val-
+list_cons(irv0, irvs) = irvs
+val () =
+xinterp_h0pat_ck1(env0, h0p0, irv0)  
+in
+  xinterp_h0patlst_ck1(env0, h0ps, irvs)
+end // end of [list_cons]
+) (*case*) // end of [xinterp_h0patlst_ck1]
 
 (* ****** ****** *)
 
