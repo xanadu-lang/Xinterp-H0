@@ -83,12 +83,25 @@ datatype irval =
 | IRVtop of (h0typ)
 //
 |
-IRVlam of
+IRVlam0 of
+(hfarglst, h0exp)
+|
+IRVlam1 of
 (irenv, hfarglst, h0exp)
 |
-IRVfix of
+IRVfix0 of
+( hdvar, hfarglst, h0exp)
+|
+IRVfix1 of
 ( irenv
 , hdvar, hfarglst, h0exp)
+//
+|
+IRVtrcd1 of (irvalist)//tuple
+(*
+|
+IRVtrcd2 of (labh0explst)//record
+*)
 //
 | IRVnone0 of () // HX: error0
 | IRVnone1 of (h0exp) // HX: error1

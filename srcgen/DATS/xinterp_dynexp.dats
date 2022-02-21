@@ -175,6 +175,78 @@ val-H0Etop(tok) = h0e0.node()
 
 (* ****** ****** *)
 
+fun
+auxlam
+( env0
+: irenv
+, h0e0
+: h0exp): irval =
+let
+val-
+H0Elam
+( knd0
+, args
+, body ) = h0e0.node()
+in
+  IRVlam1(env0, args, body)
+end
+
+fun
+auxfix
+( env0
+: irenv
+, h0e0
+: h0exp): irval =
+let
+val-
+H0Efix
+( knd0
+, nam1
+, args
+, body ) = h0e0.node()
+in
+IRVfix1(env0, nam1, args, body)
+end
+
+(* ****** ****** *)
+
+fun
+auxift1
+( env0
+: irenv
+, h0e0: h0exp): irval =
+let
+val-
+H0Eift1
+( h0e1
+, h0e2
+, opt3 ) = h0e0.node()
+val
+irv1 =
+xinterp_h0exp(env0, h0e1)
+in
+//
+case- irv1 of
+|
+IRVbtf(test) =>
+if
+test
+then
+(
+  xinterp_h0exp(env0, h0e2)
+)
+else
+(
+case+ opt3 of
+| None() => IRVnil(*void*)
+| Some(h0e3) =>
+  xinterp_h0exp(env0, h0e3)
+)
+//
+end (*let*) // end of [auxif1]
+
+(* ****** ****** *)
+
 in(*in-of-local*)
 
 (* ****** ****** *)
@@ -196,6 +268,11 @@ h0e0.node() of
 | H0Estr _ => auxstr(h0e0)
 //
 | H0Etop _ => auxtop(h0e0)
+//
+| H0Elam _ => auxlam(env0, h0e0)
+| H0Efix _ => auxfix(env0, h0e0)
+//
+| H0Eift1 _ => auxift1(env0, h0e0)
 //
 |
 _(*rest-of-h0exp*) => IRVnone1(h0e0)

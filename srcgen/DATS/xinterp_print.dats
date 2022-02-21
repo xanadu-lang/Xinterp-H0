@@ -115,16 +115,31 @@ case+ x0 of
   fprint!(out, "IRVtop(", tok, ")")
 //
 |
-IRVlam(_, args, h0e1) =>
+IRVlam0(args, h0e1) =>
 fprint!
 ( out
-, "IRVlam(", args, "; ", h0e1, ")")
+, "IRVlam1(", args, "; ", h0e1, ")")
 |
-IRVfix(_, hdv0, args, h0e1) =>
+IRVlam1(_, args, h0e1) =>
 fprint!
 ( out
-, "IRVfix("
+, "IRVlam1(", args, "; ", h0e1, ")")
+|
+IRVfix0(hdv0, args, h0e1) =>
+fprint!
+( out
+, "IRVfix0("
 , hdv0, "; ", args, "; ", h0e1, ")")
+|
+IRVfix1(_, hdv0, args, h0e1) =>
+fprint!
+( out
+, "IRVfix1("
+, hdv0, "; ", args, "; ", h0e1, ")")
+//
+|
+IRVtrcd1(irvs) =>
+fprint!(out, "IRVtrcd1(", irvs, ")")
 //
 |
 IRVnone0() =>
