@@ -97,10 +97,12 @@ IRVfix1 of
 , hdvar, hfarglst, h0exp)
 //
 |
-IRVtrcd1 of (irvalist)//tuple
+IRVtrcd1 of
+(int(*knd*), irvalist)//tuple
 (*
 |
-IRVtrcd2 of (labh0explst)//record
+IRVtrcd2 of
+(int(*knd*), labh0explst)//record
 *)
 //
 | IRVnone0 of () // HX: error0

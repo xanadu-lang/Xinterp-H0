@@ -247,6 +247,61 @@ end (*let*) // end of [auxif1]
 
 (* ****** ****** *)
 
+fun
+auxtrcd1
+( env0
+: irenv
+, h0e0: h0exp): irval =
+let
+val-
+H0Etrcd1
+( knd0
+, npf1
+, h0es ) = h0e0.node()
+//
+fun
+auxlst
+( env0
+: irenv
+, npf1: int
+, h0es
+: h0explst): irvalist =
+(
+case+ h0es of
+|
+list_nil() =>
+list_nil()
+|
+list_cons
+(h0e1, h0es) =>
+if
+npf1 > 0
+then
+(
+auxlst
+(env0, npf1-1, h0es)
+)
+else
+let
+val irv1 =
+xinterp_h0exp(env0, h0e1)
+in
+list_cons
+(
+irv1
+,
+auxlst(env0, npf1-1, h0es))
+end
+) (*case*) // end of [auxlst]
+//
+in
+IRVtrcd1
+( knd0
+, auxlst(env0, npf1, h0es))
+end (*let*) // end of [auxtrcd1]
+
+(* ****** ****** *)
+
 in(*in-of-local*)
 
 (* ****** ****** *)
@@ -273,6 +328,9 @@ h0e0.node() of
 | H0Efix _ => auxfix(env0, h0e0)
 //
 | H0Eift1 _ => auxift1(env0, h0e0)
+//
+|
+H0Etrcd1 _ => auxtrcd1(env0, h0e0)
 //
 |
 _(*rest-of-h0exp*) => IRVnone1(h0e0)
