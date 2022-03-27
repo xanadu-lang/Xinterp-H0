@@ -175,13 +175,6 @@ fprint_irlval(stderr_ref, x0)
 (* ****** ****** *)
 //
 implement
-print_irlval(x0) = 
-fprint_irlval(stdout_ref, x0)
-implement
-prerr_irlval(x0) = 
-fprint_irlval(stderr_ref, x0)
-//
-implement
 fprint_irlval
   (out, x0) =
 (
