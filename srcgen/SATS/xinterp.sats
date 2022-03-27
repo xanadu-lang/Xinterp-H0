@@ -91,6 +91,8 @@ datatype irval =
 //
 | IRVtop of (h0typ)
 //
+| IRVlft of irlftval
+//
 |
 IRVlam0 of
 (hfarglst, h0exp)
@@ -122,14 +124,24 @@ irlazval =
 | IRLVval of irval(*value*)
 | IRLVexp of (irenv, h0exp) // thunk
 //
+and
+irlftval =
+| IRLVref of ref(irvalopt)
+//
+| IRLVpcon of (irval, label)
+//
+| IRLVpbox of
+  (irval, label, int(*index*))
+| IRLVpflt of
+  (irlftval, label, int(*index*))
+//
 where
 //
 irvalist = List0(irval)
 and
 irvalopt = Option(irval)
 and
-irvalfun =
-(irvalist -<cloref1> irval)
+irvalfun = (irvalist -<cloref1> irval)
 //
 (* ****** ****** *)
 //
@@ -143,6 +155,11 @@ fprint_irval: fprint_type(irval)
 overload print with print_irval
 overload prerr with prerr_irval
 overload fprint with fprint_irval
+//
+(* ****** ****** *)
+//
+fun
+xinterp_initize(): void
 //
 (* ****** ****** *)
 //
@@ -182,6 +199,14 @@ HX: copying out the stack
 *)
 fun
 intenv_take_irenv(!intenv): irenv
+(* ****** ****** *)
+//
+fun
+xinterp_insert_hdvar
+( env0:
+! intenv
+, hdv0: hdvar, irv1: irval): void
+//
 (* ****** ****** *)
 //
 fun

@@ -51,6 +51,18 @@ XATSOPT_targetloc
 (* ****** ****** *)
 //
 #staload
+LAB =
+"{$XATSOPT}/SATS/xlabel0.sats"
+#staload
+STM =
+"{$XATSOPT}/SATS/xstamp0.sats"
+#staload
+SYM =
+"{$XATSOPT}/SATS/xsymbol.sats"
+//
+(* ****** ****** *)
+//
+#staload
 "{$XATSOPT}/SATS/intrep0.sats"
 //
 #staload "./../SATS/xinterp.sats"
@@ -231,6 +243,137 @@ case+ env of
 )
 } (* end of [intstk_take_irenv] *)
 } (*where*) // end of [intenv_take_irenv]
+
+(* ****** ****** *)
+
+implement
+xinterp_insert_hdvar
+  (env0, hdv0, irv0) =
+let
+//
+val+
+@INTENV(l0, xs) = env0
+//
+in
+//
+case xs of
+|
+intstk_nil() =>
+(
+fold@(env0);
+the_hdvardef_insert(hdv0, irv0)
+)
+|
+_(*non-intplst_nil*) =>
+(
+fold@(env0)
+) where
+{
+val () =
+(
+xs :=
+intstk_cons(H0Kvar(hdv0), irv0, xs)
+)
+} (* non-intplst_nil *)
+//
+end // end of [xinterp_insert_hdvar]
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+
+val
+the_flag = ref<int>(0)
+
+in(*in-of-local*)
+
+implement
+xinterp_initize() =
+let
+val n0 = the_flag[]
+val () = the_flag[] := n0+1
+in
+if
+(n0 = 0)
+then
+{
+(*
+val () = xinterp_initize_gint()
+*)
+}
+end // end of [xinterp_initize]
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+//
+typedef key = hdvar
+typedef itm = irval
+//
+#define HDVARMAPSZ 1024
+//
+implement
+hash_key<key>(k0) =
+let
+fun
+fhash
+( k0
+: uint): ulint = hash_key<uint>(k0)
+in
+$effmask_all
+(fhash($STM.stamp2uint(k0.stamp())))
+end
+implement
+equal_key_key<key>(k1, k2) =
+$effmask_all
+(
+$STM.eq_stamp_stamp(k1.stamp(), k2.stamp())
+)
+//
+val
+the_hdvardef_map =
+let
+val
+size =
+i2sz(HDVARMAPSZ)
+in
+hashtbl_make_nil<key,itm>(size)
+end
+//
+in (*in-of-local*)
+
+(* ****** ****** *)
+
+(*
+implement
+xinterp_fprint_the_hdvarmap
+  (out) =
+(
+  fprint_hashtbl(out, the_hdvardef_map)
+)
+*)
+
+(* ****** ****** *)
+
+implement
+the_hdvardef_search
+  (k0) =
+hashtbl_search<key,itm>(the_hdvardef_map, k0)
+
+implement
+the_hdvardef_insert
+  (k0, x0) =
+{
+val-
+~None_vt() =
+hashtbl_insert<key,itm>(the_hdvardef_map, k0, x0)
+} (* end of [the_hdvardef_insert] *)
 
 (* ****** ****** *)
 

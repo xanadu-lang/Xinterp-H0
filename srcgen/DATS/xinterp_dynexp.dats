@@ -69,6 +69,11 @@ fun
 xinterp_h0explst
 ( env0:
 ! intenv, h0es: h0explst): irvalist
+extern
+fun
+xinterp_h0expopt
+( env0:
+! intenv, opt0: h0expopt): irvalopt
 
 (* ****** ****** *)
 //
@@ -100,7 +105,27 @@ xinterp_h0patlst_ck1
 
 extern
 fun
-xinterp_initize(): void
+xinterp_hvaldecl
+( env0:
+! intenv, hvd0: hvaldecl): void
+extern
+fun
+xinterp_hvaldeclist
+( env0:
+! intenv, hvds: hvaldeclist): void
+
+(* ****** ****** *)
+
+extern
+fun
+xinterp_hvardecl
+( env0:
+! intenv, hvd0: hvardecl): void
+extern
+fun
+xinterp_hvardeclist
+( env0:
+! intenv, hvds: hvardeclist): void
 
 (* ****** ****** *)
 
@@ -412,6 +437,41 @@ end // end of [local]
 (* ****** ****** *)
 
 implement
+xinterp_h0explst
+  (env0, h0es) =
+(
+case+ h0es of
+|
+list_nil() =>
+list_nil()
+|
+list_cons(h0e1, h0es) =>
+list_cons(irv1, irvs) where
+{
+val irv1 =
+xinterp_h0exp(env0, h0e1)
+val irvs =
+xinterp_h0explst(env0, h0es)
+}
+) (*case*) // end of [xinterp_h0explst]
+
+(* ****** ****** *)
+
+implement
+xinterp_h0expopt
+  (env0, opt0) =
+(
+case+ opt0 of
+|
+None() => None()
+|
+Some(h0e0) =>
+Some(xinterp_h0exp(env0, h0e0))
+) (*case*) // end of [xinterp_h0expopt]
+
+(* ****** ****** *)
+
+implement
 xinterp_h0pat_ck0
   (h0p0, irv0) =
 let
@@ -569,6 +629,211 @@ in
   xinterp_h0patlst_ck1(env0, h0ps, irvs)
 end // end of [list_cons]
 ) (*case*) // end of [xinterp_h0patlst_ck1]
+
+(* ****** ****** *)
+
+local
+
+(* ****** ****** *)
+
+fun
+aux_include
+( env0:
+! intenv
+, dcl0: h0dcl): void =
+let
+//
+val-
+H0Cinclude
+( tok
+, src1(*d1exp*)
+, knd2(*stadyn*)
+, opt3(*fpathopt*)
+, opt4) = dcl0.node()
+//
+in
+case+ opt4 of
+| None() => ()
+| Some(dcls) =>
+  xinterp_h0dclist(env0, dcls)
+end // end of [aux_include]
+
+(* ****** ****** *)
+
+fun
+aux_valdecl
+( env0:
+! intenv
+, dcl0: h0dcl): void =
+let
+val-
+H0Cvaldecl
+( knd0
+, mopt
+, hvds) = dcl0.node()
+in
+xinterp_hvaldeclist(env0, hvds)
+end // end of [aux_valdecl]
+
+(* ****** ****** *)
+
+fun
+aux_vardecl
+( env0:
+! intenv
+, dcl0: h0dcl): void =
+let
+val-
+H0Cvardecl
+( knd0
+, mopt
+, hvds) = dcl0.node()
+in
+xinterp_hvardeclist(env0, hvds)
+end // end of [aux_vardecl]
+
+(* ****** ****** *)
+
+in(*in-of-local*)
+
+implement
+xinterp_h0dcl
+  (env0, dcl0) =
+(
+case+
+dcl0.node() of
+//
+|
+H0Cvaldecl _ =>
+aux_valdecl(env0, dcl0)
+//
+| _ (*rest-of-h0dcl*) => ()
+//
+) where
+{
+(*
+val () =
+println!
+("xinterp_h0dcl: dcl0 = ", dcl0)
+*)
+//
+} (*where*) // end of [xinterp_h0dcl]
+
+end // end of [local]
+
+(* ****** ****** *)
+
+implement
+xinterp_h0dclist
+  (env0, dcls) =
+(
+case+ dcls of
+|
+list_nil() => ()
+|
+list_cons(dcl1, dcls) =>
+{
+val () =
+xinterp_h0dcl(env0, dcl1)
+val () =
+xinterp_h0dclist(env0, dcls)
+}
+) (*case*) // end of [xinterp_h0dclist]
+
+(* ****** ****** *)
+
+implement
+xinterp_hvaldecl
+  (env0, x0) =
+let
+//
+val+
+HVALDECL
+( rcd ) = x0
+//
+val pat = rcd.pat
+val def = rcd.def
+//
+val def =
+xinterp_h0expopt(env0, def)
+//
+in
+//
+case+ def of
+|
+None() => ()
+|
+Some(h0v) =>
+xinterp_h0pat_ck1(env0, pat, h0v)
+//
+end (*let*) // end of [xinterp_hvaldecl]
+
+implement
+xinterp_hvaldeclist
+  (env0, xs) =
+(
+case+ xs of
+|
+list_nil() => ()
+|
+list_cons(x0, xs) =>
+(
+  xinterp_hvaldeclist(env0, xs)
+) where
+{
+val () = xinterp_hvaldecl(env0, x0)
+}
+) (*case*) // end of [xinterp_hvaldeclist]
+
+(* ****** ****** *)
+
+implement
+xinterp_hvardecl
+  (env0, x0) =
+let
+//
+val+
+HVARDECL(rcd) = x0
+//
+val hdv = rcd.hdv
+val ini = rcd.ini
+//
+val ini =
+xinterp_h0expopt(env0, ini)
+//
+(*
+val ( ) =
+println!
+("xinterp_hvardecl: hdv = ", hdv)
+val ( ) =
+println!
+("xinterp_hvardecl: ini = ", ini)
+*)
+//
+in
+//
+xinterp_insert_hdvar
+(env0, hdv
+     , IRVlft(IRLVref(ref(ini))))
+//
+end // end of [xinterp_hvardecl]
+
+implement
+xinterp_hvardeclist
+  (env0, xs) =
+(
+case+ xs of
+|
+list_nil() => ()
+|
+list_cons(x0, xs) =>
+(
+  xinterp_hvardeclist(env0, xs)
+) where
+{
+val () = xinterp_hvardecl(env0, x0)
+}
+) (*case*) // end of [xinterp_hvardeclist]
 
 (* ****** ****** *)
 
