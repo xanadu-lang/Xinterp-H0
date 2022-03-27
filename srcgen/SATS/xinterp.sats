@@ -91,7 +91,7 @@ datatype irval =
 //
 | IRVtop of (h0typ)
 //
-| IRVlft of irlftval
+| IRVlft of (irlval)
 //
 |
 IRVlam0 of
@@ -125,15 +125,19 @@ irlazval =
 | IRLVexp of (irenv, h0exp) // thunk
 //
 and
-irlftval =
-| IRLVref of ref(irvalopt)
+irlval =
+|
+IRLVref of ref(irvalopt)
 //
-| IRLVpcon of (irval, label)
+|
+IRLVpcon of (irval, label)
 //
-| IRLVpbox of
-  (irval, label, int(*index*))
-| IRLVpflt of
-  (irlftval, label, int(*index*))
+|
+IRLVpbox of
+(irval, label, int(*index*))
+|
+IRLVpflt of
+(irlval, label, int(*index*))
 //
 where
 //
@@ -155,6 +159,19 @@ fprint_irval: fprint_type(irval)
 overload print with print_irval
 overload prerr with prerr_irval
 overload fprint with fprint_irval
+//
+(* ****** ****** *)
+//
+fun
+print_irlval: print_type(irlval)
+fun
+prerr_irlval: prerr_type(irlval)
+fun
+fprint_irlval: fprint_type(irlval)
+//
+overload print with print_irlval
+overload prerr with prerr_irlval
+overload fprint with fprint_irlval
 //
 (* ****** ****** *)
 //

@@ -114,6 +114,9 @@ case+ x0 of
 | IRVtop(tok) =>
   fprint!(out, "IRVtop(", tok, ")")
 //
+| IRVlft(lvl) =>
+  fprint!(out, "IRVlft(", lvl, ")")
+//
 |
 IRVlam0
 (args, h0e1) =>
@@ -160,6 +163,56 @@ IRVnone1(h0e1) =>
 //
 ) (*case*) // end of [fprint_irval]
 
+(* ****** ****** *)
+//
+implement
+print_irlval(x0) = 
+fprint_irlval(stdout_ref, x0)
+implement
+prerr_irlval(x0) = 
+fprint_irlval(stderr_ref, x0)
+//
+(* ****** ****** *)
+//
+implement
+print_irlval(x0) = 
+fprint_irlval(stdout_ref, x0)
+implement
+prerr_irlval(x0) = 
+fprint_irlval(stderr_ref, x0)
+//
+implement
+fprint_irlval
+  (out, x0) =
+(
+case+ x0 of
+|
+IRLVref(r0) =>
+fprint!
+( out
+, "IRLVref(", ref_get_ptr(r0), ")")
+//
+|
+IRLVpcon
+(x1, lab) =>
+fprint!
+(out, "IRLVpcon(", x1, "; ", lab, ")")
+//
+|
+IRLVpbox
+(x1, lab, idx) =>
+fprint!
+( out
+, "IRLVpbox(", x1, "; ", lab, "; ", idx, ")")
+|
+IRLVpflt
+(x1, lab, idx) =>
+fprint!
+( out
+, "IRLVpflt(", x1, "; ", lab, "; ", idx, ")")
+//
+) (* end of [fprint_irlval] *)
+//
 (* ****** ****** *)
 
 (* end of [xint_xinterp_print.dats] *)
