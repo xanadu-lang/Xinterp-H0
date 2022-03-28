@@ -89,9 +89,11 @@ fprint_irval(stderr_ref, x0)
 (* ****** ****** *)
 
 implement
-fprint_irval(out, x0) =
+fprint_irval
+( out, irv0 ) =
 (
-case+ x0 of
+case+
+irv0.node() of
 //
 | IRVnil() =>
   fprint!(out, "IRVnil()")
@@ -166,43 +168,43 @@ IRVnone1(h0e1) =>
 (* ****** ****** *)
 //
 implement
-print_irlval(x0) = 
-fprint_irlval(stdout_ref, x0)
+print_irlftval(x0) = 
+fprint_irlftval(stdout_ref, x0)
 implement
-prerr_irlval(x0) = 
-fprint_irlval(stderr_ref, x0)
+prerr_irlftval(x0) = 
+fprint_irlftval(stderr_ref, x0)
 //
 (* ****** ****** *)
 //
 implement
-fprint_irlval
-  (out, x0) =
+fprint_irlftval
+( out, irlv ) =
 (
-case+ x0 of
+case+ irlv of
 |
-IRLVref(r0) =>
+IRLFTref(r0) =>
 fprint!
 ( out
-, "IRLVref(", ref_get_ptr(r0), ")")
+, "IRLFTref(", ref_get_ptr(r0), ")")
 //
 |
-IRLVpcon
+IRLFTpcon
 (x1, lab) =>
 fprint!
-(out, "IRLVpcon(", x1, "; ", lab, ")")
+(out, "IRLFTpcon(", x1, "; ", lab, ")")
 //
 |
-IRLVpbox
+IRLFTpbox
 (x1, lab, idx) =>
 fprint!
 ( out
-, "IRLVpbox(", x1, "; ", lab, "; ", idx, ")")
+, "IRLFTpbox(", x1, "; ", lab, "; ", idx, ")")
 |
-IRLVpflt
+IRLFTpflt
 (x1, lab, idx) =>
 fprint!
 ( out
-, "IRLVpflt(", x1, "; ", lab, "; ", idx, ")")
+, "IRLFTpflt(", x1, "; ", lab, "; ", idx, ")")
 //
 ) (* end of [fprint_irlval] *)
 //

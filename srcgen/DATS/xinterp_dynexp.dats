@@ -59,6 +59,44 @@ fprint_val<irval> = fprint_irval
 //
 (* ****** ****** *)
 
+local
+//
+absimpl
+irval_tbox = $rec
+{ irval_type= h0typ
+, irval_node= irval_node
+} (* end of [absimpl] *)
+//
+in (* in-of-local *)
+
+implement
+irval_get_type
+  (irv) = irv.irval_type
+//
+implement
+irval_get_node
+  (irv) = irv.irval_node
+//
+implement
+irval_make_node
+(h0t0, node) = $rec
+{
+irval_type= h0t0, irval_node= node
+} (* irval_make_node *)
+
+end (* end of [local] *)
+
+(* ****** ****** *)
+//
+implement
+irval_nil(h0t0) =
+irval_make_node(h0t0, IRVnil())
+implement
+irval_top(h0t0) =
+irval_make_node(h0t0, IRVtop(h0t0))
+//
+(* ****** ****** *)
+
 extern
 fun
 xinterp_h0exp
@@ -166,21 +204,25 @@ fun
 auxi00
 ( h0e0
 : h0exp): irval =
-IRVint(int) where
-{
+let
+val h0t0 = h0e0.type()
 val-
 H0Ei00(int) = h0e0.node()
-} (* end of [auxi00] *)
+in
+irval_make_node(h0t0, IRVint(int))
+end (*let*) // end of [auxi00]
 
 fun
 auxs00
 ( h0e0
 : h0exp): irval =
-IRVstr(str) where
-{
+let
+val h0t0 = h0e0.type()
 val-
 H0Es00(str) = h0e0.node()
-} (* end of [auxs00] *)
+in
+irval_make_node(h0t0, IRVstr(str))
+end (*let*) // end of [auxs00]
 
 (* ****** ****** *)
 
@@ -189,9 +231,13 @@ auxint
 ( h0e0
 : h0exp): irval =
 (
-IRVint(token2dint(tok))
+irval_make_node
+( h0t0
+, IRVint(token2dint(tok))
+)
 ) where
 {
+val h0t0 = h0e0.type()
 val-
 H0Eint(tok) = h0e0.node()
 } (* end of [auxint] *)
@@ -203,9 +249,13 @@ auxbtf
 ( h0e0
 : h0exp): irval =
 (
-IRVbtf(token2dbtf(tok))
+irval_make_node
+( h0t0
+, IRVbtf(token2dbtf(tok))
+)
 ) where
 {
+val h0t0 = h0e0.type()
 val-H0Ebtf(tok) = h0e0.node()
 } (* end of [auxbtf] *)
 
@@ -216,9 +266,13 @@ auxchr
 ( h0e0
 : h0exp): irval =
 (
-IRVchr(token2dchr(tok))
+irval_make_node
+( h0t0
+, IRVchr(token2dchr(tok))
+)
 ) where
 {
+val h0t0 = h0e0.type()
 val-H0Echr(tok) = h0e0.node()
 } (* end of [auxchr] *)
 
@@ -229,9 +283,13 @@ auxflt
 ( h0e0
 : h0exp): irval =
 (
-IRVflt(token2dflt(tok))
+irval_make_node
+( h0t0
+, IRVflt(token2dflt(tok))
+)
 ) where
 {
+val h0t0 = h0e0.type()
 val-H0Eflt(tok) = h0e0.node()
 } (* end of [auxflt] *)
 
@@ -240,9 +298,13 @@ auxstr
 ( h0e0
 : h0exp): irval =
 (
-IRVstr(token2dstr(tok))
+irval_make_node
+( h0t0
+, IRVstr(token2dstr(tok))
+)
 ) where
 {
+val h0t0 = h0e0.type()
 val-H0Estr(tok) = h0e0.node()
 } (* end of [auxstr] *)
 
@@ -253,7 +315,7 @@ auxtop
 ( h0e0
 : h0exp): irval =
 (
-  IRVtop( h0e0.type() )
+  irval_top(h0e0.type())
 ) where
 {
 val-H0Etop(tok) = h0e0.node()
@@ -267,6 +329,9 @@ auxlam
 ! intenv
 , h0e0: h0exp): irval =
 let
+//
+val h0t0 = h0e0.type()
+//
 val-
 H0Elam
 ( knd0
@@ -276,7 +341,10 @@ val
 fenv =
 intenv_take_irenv(env0)
 in
-  IRVlam1(fenv, args, body)
+irval_make_node
+( h0t0
+, IRVlam1(fenv, args, body)
+)
 end
 
 fun
@@ -285,6 +353,7 @@ auxfix
 ! intenv
 , h0e0: h0exp): irval =
 let
+val h0t0 = h0e0.type()
 val-
 H0Efix
 ( knd0
@@ -295,7 +364,10 @@ val
 fenv =
 intenv_take_irenv(env0)
 in
-IRVfix1(fenv, nam1, args, body)
+irval_make_node
+( h0t0
+, IRVfix1(fenv, nam1, args, body)
+)
 end
 
 (* ****** ****** *)
@@ -316,7 +388,8 @@ irv1 =
 xinterp_h0exp(env0, h0e1)
 in
 //
-case- irv1 of
+case-
+irv1.node() of
 |
 IRVbtf(test) =>
 if
@@ -328,7 +401,8 @@ then
 else
 (
 case+ opt3 of
-| None() => IRVnil(*void*)
+| None() =>
+  irval_nil(h0e0.type())
 | Some(h0e3) =>
   xinterp_h0exp(env0, h0e3)
 )
@@ -343,6 +417,9 @@ auxtrcd1
 ! intenv
 , h0e0: h0exp): irval =
 let
+//
+val h0t0 = h0e0.type()
+//
 val-
 H0Etrcd1
 ( knd0
@@ -385,9 +462,12 @@ end
 ) (*case*) // end of [auxlst]
 //
 in
-IRVtrcd1
-( knd0
-, auxlst(env0, npf1, h0es))
+irval_make_node
+( h0t0
+, IRVtrcd1
+  ( knd0
+  , auxlst(env0, npf1, h0es))
+)
 end (*let*) // end of [auxtrcd1]
 
 (* ****** ****** *)
@@ -423,7 +503,12 @@ h0e0.node() of
 H0Etrcd1 _ => auxtrcd1(env0, h0e0)
 //
 |
-_(*rest-of-h0exp*) => IRVnone1(h0e0)
+_(*rest-of-h0exp*) =>
+let
+val h0t0 = h0e0.type()
+in
+irval_make_node(h0t0, IRVnone1(h0e0))
+end (*let*) // rest-of-h0exp
 ) where
 {
 val () =
@@ -498,7 +583,8 @@ H0Pvar _ => true
 |
 H0Pint(int1) =>
 (
-case- irv0 of
+case-
+irv0.node() of
 |
 IRVint(int0) =>
 ( int0=int1 ) where
@@ -509,7 +595,8 @@ val int1=token2dint(int1)
 |
 H0Pbtf(btf1) =>
 (
-case- irv0 of
+case-
+irv0.node() of
 |
 IRVbtf(btf0) =>
 ( btf0=btf1 ) where
@@ -520,7 +607,8 @@ val btf1=token2dbtf(btf1)
 |
 H0Pchr(chr1) =>
 (
-case- irv0 of
+case-
+irv0.node() of
 |
 IRVchr(chr0) =>
 ( chr0=chr1 ) where
@@ -532,7 +620,8 @@ val chr1=token2dchr(chr1)
 H0Ptrcd1
 (knd0, npf1, h0ps) =>
 (
-case- irv0 of
+case-
+irv0.node() of
 |
 IRVtrcd1(knd1, irvs) =>
 let
@@ -757,6 +846,10 @@ val def = rcd.def
 val def =
 xinterp_h0expopt(env0, def)
 //
+val ( ) =
+println!
+("xinterp_hvaldecl: def = ", def)
+//
 in
 //
 case+ def of
@@ -810,11 +903,15 @@ println!
 ("xinterp_hvardecl: ini = ", ini)
 *)
 //
+val h0t0 = hdv.type()
+//
+val irv0 = 
+irval_make_node
+(h0t0, IRVlft(IRLFTref(ref(ini))))
+//
 in
 //
-xinterp_insert_hdvar
-(env0, hdv
-     , IRVlft(IRLVref(ref(ini))))
+xinterp_insert_hdvar(env0, hdv, irv0)
 //
 end // end of [xinterp_hvardecl]
 

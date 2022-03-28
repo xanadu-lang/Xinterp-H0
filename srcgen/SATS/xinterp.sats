@@ -47,6 +47,23 @@ LAB =
 H0E =
 "{$XATSOPT}/SATS/intrep0.sats"
 (* ****** ****** *)
+
+abstype irenv_tbox = ptr
+typedef irenv = irenv_tbox
+
+(* ****** ****** *)
+//
+abstype irval_tbox = ptr
+typedef irval = irval_tbox
+//
+(*
+abstype irlazv_tbox = ptr
+typedef irlazv = irlazv_tbox
+abstype irlftv_tbox = ptr
+typedef irlftv = irlftv_tbox
+*)
+//
+(* ****** ****** *)
 typedef label = $LAB.label
 (* ****** ****** *)
 //
@@ -70,13 +87,9 @@ typedef h0dclist = $H0E.h0dclist
 //
 typedef h0comped = $H0E.h0comped
 (* ****** ****** *)
-
-abstype irenv_tbox = ptr
-typedef irenv = irenv_tbox
-
-(* ****** ****** *)
 //
-datatype irval =
+datatype
+irval_node =
 //
 | IRVnil of ()
 //
@@ -91,7 +104,7 @@ datatype irval =
 //
 | IRVtop of (h0typ)
 //
-| IRVlft of (irlval)
+| IRVlft of (irlftval)
 //
 |
 IRVlam0 of
@@ -121,23 +134,23 @@ IRVtrcd2 of
 //
 and
 irlazval =
-| IRLVval of irval(*value*)
-| IRLVexp of (irenv, h0exp) // thunk
+| IRLAZval of irval(*value*)
+| IRLAZexp of (irenv, h0exp) // thunk
 //
 and
-irlval =
+irlftval =
 |
-IRLVref of ref(irvalopt)
+IRLFTref of ref(irvalopt)
 //
 |
-IRLVpcon of (irval, label)
+IRLFTpcon of (irval, label)
 //
 |
-IRLVpbox of
+IRLFTpbox of
 (irval, label, int(*index*))
 |
-IRLVpflt of
-(irlval, label, int(*index*))
+IRLFTpflt of
+(irlftval, label, int(*index*))
 //
 where
 //
@@ -146,6 +159,29 @@ and
 irvalopt = Option(irval)
 and
 irvalfun = (irvalist -<cloref1> irval)
+//
+(* ****** ****** *)
+//
+fun
+irval_nil(h0typ): irval
+fun
+irval_top(h0typ): irval
+//
+fun
+irval_make_node
+( h0t0: h0typ
+, node: irval_node): irval
+//
+(* ****** ****** *)
+//
+fun
+irval_get_type
+( irv0: irval ): h0typ
+overload .type with irval_get_type
+fun
+irval_get_node
+( irv0: irval ): irval_node
+overload .node with irval_get_node
 //
 (* ****** ****** *)
 //
@@ -163,15 +199,28 @@ overload fprint with fprint_irval
 (* ****** ****** *)
 //
 fun
-print_irlval: print_type(irlval)
+print_irlazval(irlazval): void
 fun
-prerr_irlval: prerr_type(irlval)
+prerr_irlazval(irlazval): void
 fun
-fprint_irlval: fprint_type(irlval)
+fprint_irlazval: fprint_type(irlazval)
 //
-overload print with print_irlval
-overload prerr with prerr_irlval
-overload fprint with fprint_irlval
+overload print with print_irlazval
+overload prerr with prerr_irlazval
+overload fprint with fprint_irlazval
+//
+(* ****** ****** *)
+//
+fun
+print_irlftval(irlftval): void
+fun
+prerr_irlftval(irlftval): void
+fun
+fprint_irlftval: fprint_type(irlftval)
+//
+overload print with print_irlftval
+overload prerr with prerr_irlftval
+overload fprint with fprint_irlftval
 //
 (* ****** ****** *)
 //
