@@ -91,6 +91,11 @@ fprint_irval(stderr_ref, x0)
 implement
 fprint_irval
 ( out, irv0 ) =
+let
+//
+fun
+auxmain
+(irv0: irval): void =
 (
 case+
 irv0.node() of
@@ -162,8 +167,12 @@ IRVnone1(h0e1) =>
 (
   fprint!(out, "IRVnone1(", h0e1, ")")
 )
+) (*case*) // end of [auxmain0]
 //
-) (*case*) // end of [fprint_irval]
+in
+  auxmain(irv0)
+; fprint!(out, "@(", irv0.type(), ")")
+end (*let*) // end of [fprint_irval]
 
 (* ****** ****** *)
 //
@@ -206,7 +215,7 @@ fprint!
 ( out
 , "IRLFTpflt(", x1, "; ", lab, "; ", idx, ")")
 //
-) (* end of [fprint_irlval] *)
+) (* end of [fprint_irlftval] *)
 //
 (* ****** ****** *)
 
