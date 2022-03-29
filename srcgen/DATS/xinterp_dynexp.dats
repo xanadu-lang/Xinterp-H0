@@ -324,6 +324,56 @@ val-H0Etop(tok) = h0e0.node()
 (* ****** ****** *)
 
 fun
+auxvar
+( env0:
+! intenv
+, h0e0: h0exp): irval =
+let
+val-
+H0Evar(x0) = h0e0.node()
+val
+opt =
+xinterp_search_hdvar(env0,x0)
+//
+(*
+val () =
+println!("auxvar: x0 = ", x0)
+*)
+//
+in
+case-
+opt of ~Some_vt(irv1) => irv1
+end (*let*) // end of [auxvar]
+
+(* ****** ****** *)
+
+fun
+auxkvar
+( env0:
+! intenv
+, h0e0: h0exp): irval =
+let
+val-
+H0Ekvar(k0,x0) = h0e0.node()
+val
+opt =
+xinterp_search_hdvar(env0,x0)
+//
+(*
+val () =
+println!("auxkvar: k0 = ", k0)
+val () =
+println!("auxkvar: x0 = ", x0)
+*)
+//
+in
+case-
+opt of ~Some_vt(irv1) => irv1
+end (*let*) // end of [auxkvar]
+
+(* ****** ****** *)
+
+fun
 auxlam
 ( env0:
 ! intenv
@@ -493,6 +543,11 @@ h0e0.node() of
 | H0Estr _ => auxstr(h0e0)
 //
 | H0Etop _ => auxtop(h0e0)
+//
+|
+H0Evar _ => auxvar(env0, h0e0)
+|
+H0Ekvar _ => auxkvar(env0, h0e0)
 //
 | H0Elam _ => auxlam(env0, h0e0)
 | H0Efix _ => auxfix(env0, h0e0)
@@ -689,13 +744,37 @@ let
 (*
 val () =
 println!
-("xinterp_h0pat_ck0: h0p0 = ", h0p0)
+("xinterp_h0pat_ck1: h0p0 = ", h0p0)
 val () =
 println!
-("xinterp_h0pat_ck0: irv0 = ", irv0)
+("xinterp_h0pat_ck1: irv0 = ", irv0)
 *)
 //
 in
+//
+case-
+h0p0.node() of
+//
+|
+H0Pnil() =>
+(
+case-
+irv0.node() of
+|
+IRVnil() => ()
+)
+//
+|
+H0Pany() => ()
+//
+|
+H0Pvar(hdv0) =>
+{
+val () =
+xinterp_insert_hdvar
+( env0, hdv0, irv0 )
+} (* end of [H0Pvar] *)
+//
 end (*end*) // end of [xinterp_h0pat_ck1]
 
 (* ****** ****** *)

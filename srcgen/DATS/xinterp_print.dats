@@ -167,11 +167,13 @@ IRVnone1(h0e1) =>
 (
   fprint!(out, "IRVnone1(", h0e1, ")")
 )
-) (*case*) // end of [auxmain0]
+) (*case*) // end of [auxmain]
 //
 in
   auxmain(irv0)
+(*
 ; fprint!(out, "@(", irv0.type(), ")")
+*)
 end (*let*) // end of [fprint_irval]
 
 (* ****** ****** *)

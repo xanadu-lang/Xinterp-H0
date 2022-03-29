@@ -247,6 +247,33 @@ intenv_free_nil(intenv): void
 (* ****** ****** *)
 //
 fun
+xinterp_search_hdcst
+( env:
+! intenv
+, hdc: hdcst): Option_vt(irval)
+fun
+xinterp_search_hdvar
+( env:
+! intenv
+, hdv: hdvar): Option_vt(irval)
+//
+(* ****** ****** *)
+//
+fun
+xinterp_insert_hdcst
+( env:
+! intenv
+, hdc: hdcst, irv: irval): void
+//
+fun
+xinterp_insert_hdvar
+( env:
+! intenv
+, hdv: hdvar, irv: irval): void
+//
+(* ****** ****** *)
+//
+fun
 xinterp_h0dcl
 ( env0:
 ! intenv, dcl0: h0dcl): void
@@ -265,14 +292,6 @@ HX: copying out the stack
 *)
 fun
 intenv_take_irenv(!intenv): irenv
-(* ****** ****** *)
-//
-fun
-xinterp_insert_hdvar
-( env0:
-! intenv
-, hdv0: hdvar, irv1: irval): void
-//
 (* ****** ****** *)
 //
 fun

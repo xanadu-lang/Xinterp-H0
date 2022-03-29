@@ -247,6 +247,50 @@ case+ env of
 (* ****** ****** *)
 
 implement
+xinterp_search_hdvar
+  (env0, hdv0) =
+(
+  auxlst(xs)) where
+{
+//
+vtypedef
+res = Option_vt(irval)
+val+INTENV(l0, xs) = env0
+//
+fun
+auxlst
+(xs: !intstk): res =
+(
+case+ xs of
+| intstk_nil() =>
+  the_hdvardef_search(hdv0)
+| intstk_fun() =>
+  the_hdvardef_search(hdv0)
+//
+| intstk_let1(xs) => auxlst(xs)
+| intstk_try1(xs) => auxlst(xs)
+//
+(*
+| intplst_loc1(xs) => auxlst(xs)
+| intplst_loc2(xs) => auxlst(xs)
+*)
+| intstk_cons
+  (h0k1, irv1, xs) =>
+  (
+  case+ h0k1 of
+  | H0Kcst(hdc1) => auxlst(xs)
+  | H0Kvar(hdv1) =>
+    if
+    (hdv0 = hdv1)
+    then Some_vt(irv1) else auxlst(xs)
+  )
+) (* end of [auxlst] *)
+//
+} (* end of [xinterp_search_hdvar] *)
+
+(* ****** ****** *)
+
+implement
 xinterp_insert_hdvar
   (env0, hdv0, irv0) =
 let
