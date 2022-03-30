@@ -106,6 +106,8 @@ irval_node =
 //
 | IRVlft of (irlftval)
 //
+| IRVfun of (irvalfun)
+//
 |
 IRVlam0 of
 (hfarglst, h0exp)
@@ -119,6 +121,11 @@ IRVfix0 of
 IRVfix1 of
 ( irenv
 , hdvar, hfarglst, h0exp)
+|
+IRVfixs of
+( irenv
+, hdvar(*f*)
+, hfarglst, h0exp, h0explst)
 //
 |
 IRVtrcd1 of
@@ -251,6 +258,12 @@ xinterp_search_hdcst
 ( env:
 ! intenv
 , hdc: hdcst): Option_vt(irval)
+//
+fun
+xinterp_search_hdvtp
+( env:
+! intenv
+, hdv: hdvar): Option_vt(irval)
 fun
 xinterp_search_hdvar
 ( env:

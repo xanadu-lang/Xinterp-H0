@@ -153,8 +153,8 @@ val+~INTENV(l0, xs) = env0
 (* ****** ****** *)
 //
 implement
-intenv_make_irenv(kxs) =
-let
+intenv_make_irenv
+  ( kxs ) = let
 //
 fun
 intstk_make_irenv
@@ -216,7 +216,8 @@ res =
 List0_vt(@(h0key, irval))
 fun
 auxenv
-(env: !intstk, res: res): res =
+( env:
+! intstk, res: res): res =
 (
 case+ env of
 //
@@ -235,15 +236,68 @@ case+ env of
     (env) => auxenv(env, res)
 *)
 //
-| intstk_cons(k0, x0, env) =>
-  (
-    auxenv
-    (env, list_vt_cons((k0, x0), res))
-  )
+|
+intstk_cons(k0, x0, env) =>
+(
+  auxenv
+  (env, list_vt_cons((k0, x0), res))
+)
 )
 } (* end of [intstk_take_irenv] *)
 } (*where*) // end of [intenv_take_irenv]
 
+(* ****** ****** *)
+
+implement
+xinterp_search_hdcst
+  (env0, hdc0) =
+  (auxlst(xs)) where
+{
+//
+vtypedef
+res = Option_vt(irval)
+val+INTENV(l0, xs) = env0
+//
+fun
+auxlst
+(xs: !intstk): res =
+(
+case+ xs of
+| intstk_nil() =>
+  the_hdcstdef_search(hdc0)
+| intstk_fun() =>
+  the_hdcstdef_search(hdc0)
+//
+| intstk_let1(xs) => auxlst(xs)
+| intstk_try1(xs) => auxlst(xs)
+//
+(*
+| intplst_loc1(xs) => auxlst(xs)
+| intplst_loc2(xs) => auxlst(xs)
+*)
+| intstk_cons
+  (h0k1, irv1, xs) =>
+  (
+  case+ h0k1 of
+  | H0Kcst(hdc1) =>
+    if
+    (hdc0 = hdc1)
+    then Some_vt(irv1) else auxlst(xs)
+  | H0Kvar(hdv1) => auxlst(xs)
+  )
+) (* end of [auxlst] *)
+//
+} (* end of [xinterp_search_hdcst] *)
+
+(* ****** ****** *)
+//
+implement
+xinterp_search_hdvtp
+  (env0, hdv0) =
+(
+the_hdvardef_search(hdv0)
+)
+//
 (* ****** ****** *)
 
 implement
@@ -262,28 +316,35 @@ auxlst
 (xs: !intstk): res =
 (
 case+ xs of
-| intstk_nil() =>
-  the_hdvardef_search(hdv0)
-| intstk_fun() =>
-  the_hdvardef_search(hdv0)
+|
+intstk_nil() =>
+the_hdvardef_search(hdv0)
+|
+intstk_fun() =>
+the_hdvardef_search(hdv0)
 //
-| intstk_let1(xs) => auxlst(xs)
-| intstk_try1(xs) => auxlst(xs)
+|
+intstk_let1(xs) => auxlst(xs)
+|
+intstk_try1(xs) => auxlst(xs)
 //
 (*
-| intplst_loc1(xs) => auxlst(xs)
-| intplst_loc2(xs) => auxlst(xs)
+|
+intplst_loc1(xs) => auxlst(xs)
+|
+intplst_loc2(xs) => auxlst(xs)
 *)
-| intstk_cons
-  (h0k1, irv1, xs) =>
-  (
-  case+ h0k1 of
-  | H0Kcst(hdc1) => auxlst(xs)
-  | H0Kvar(hdv1) =>
-    if
-    (hdv0 = hdv1)
-    then Some_vt(irv1) else auxlst(xs)
-  )
+|
+intstk_cons
+(h0k1, irv1, xs) =>
+(
+case+ h0k1 of
+| H0Kcst(hdc1) => auxlst(xs)
+| H0Kvar(hdv1) =>
+  if
+  (hdv0 = hdv1)
+  then Some_vt(irv1) else auxlst(xs)
+)
 ) (* end of [auxlst] *)
 //
 } (* end of [xinterp_search_hdvar] *)
@@ -350,6 +411,76 @@ val () = xinterp_initize_gint()
 *)
 }
 end // end of [xinterp_initize]
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+//
+typedef key = hdcst
+typedef itm = irval
+//
+#define HDCSTMAPSZ 1024
+//
+implement
+hash_key<key>(k0) =
+let
+fun
+fhash
+( k0
+: uint): ulint = hash_key<uint>(k0)
+in
+$effmask_all
+(fhash($STM.stamp2uint(k0.stamp())))
+end
+implement
+equal_key_key<key>(k1, k2) =
+$effmask_all
+(
+$STM.eq_stamp_stamp(k1.stamp(), k2.stamp())
+)
+//
+val
+the_hdcstdef_map =
+let
+val
+size =
+i2sz(HDCSTMAPSZ)
+in
+hashtbl_make_nil<key,itm>(size)
+end
+//
+in (*in-of-local*)
+
+(* ****** ****** *)
+
+(*
+implement
+xinterp_fprint_the_hdcstmap
+  (out) =
+(
+  fprint_hashtbl(out, the_hdcstdef_map)
+)
+*)
+
+(* ****** ****** *)
+
+implement
+the_hdcstdef_search
+  (k0) =
+hashtbl_search<key,itm>(the_hdcstdef_map, k0)
+
+implement
+the_hdcstdef_insert
+  (k0, x0) =
+{
+val-
+~None_vt() =
+hashtbl_insert<key,itm>(the_hdcstdef_map, k0, x0)
+} (* end of [the_hdcstdef_insert] *)
+
+(* ****** ****** *)
 
 end // end of [local]
 

@@ -10,8 +10,9 @@ Sat Feb 19 14:33:31 EST 2022
 //
 val x0 = 0
 val x1 = 1
-val x2 = x1
-////
+val x0 = x0
+val x1 = x1
+//
 val x01 = x0 + x1
 ////
 (* ****** ****** *)
