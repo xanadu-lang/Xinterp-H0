@@ -60,6 +60,13 @@ STM =
 SYM =
 "{$XATSOPT}/SATS/xsymbol.sats"
 //
+typedef sym_t = $SYM.symbol
+//
+overload
+= with $SYM.eq_symbol_symbol
+overload
+.stamp with $SYM.symbol_get_stamp
+//
 (* ****** ****** *)
 //
 #staload
@@ -71,12 +78,23 @@ SYM =
 //
 extern
 fun
+the_hdctpdef_search
+(k0: sym_t): Option_vt(irval)
+extern
+fun
+the_hdctpdef_insert
+(k0: sym_t, def: irval): void
+//
+(* ****** ****** *)
+//
+extern
+fun
 the_hdcstdef_search
 (k0: hdcst): Option_vt(irval)
 extern
 fun
 the_hdcstdef_insert
-(d2c: hdcst, def: irval): void
+(k0: hdcst, def: irval): void
 //
 extern
 fun
@@ -85,7 +103,7 @@ the_hdvardef_search
 extern
 fun
 the_hdvardef_insert
-(d2v: hdvar, def: irval): void
+(k0: hdvar, def: irval): void
 //
 (* ****** ****** *)
 //
@@ -418,6 +436,73 @@ end // end of [local]
 
 local
 //
+typedef key = sym_t
+typedef itm = irval
+//
+#define HDCSTMAPSZ 1024
+//
+implement
+hash_key<key>(k0) =
+let
+fun
+fhash
+( k0
+: uint)
+: ulint = hash_key<uint>(k0)
+in
+$effmask_all(fhash(k0.stamp()))
+end
+implement
+equal_key_key<key>
+(k1, k2) = $effmask_all(k1 = k2)
+//
+val
+the_hdctpdef_map =
+let
+val
+size =
+i2sz(HDCSTMAPSZ)
+in
+hashtbl_make_nil<key,itm>(size)
+end
+//
+in (*in-of-local*)
+
+(* ****** ****** *)
+(*
+implement
+xinterp_fprint_the_hdctpmap
+  (out) =
+(
+fprint_hashtbl(out, the_hdctpdef_map)
+)
+*)
+(* ****** ****** *)
+
+implement
+the_hdctpdef_search
+  (k0) =
+hashtbl_search<key,itm>(the_hdctpdef_map, k0)
+
+(* ****** ****** *)
+
+implement
+the_hdctpdef_insert
+  (k0, x0) =
+{
+val-
+~None_vt() =
+hashtbl_insert<key,itm>(the_hdctpdef_map, k0, x0)
+} (* end of [the_hdcstdef_insert] *)
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
+local
+//
 typedef key = hdcst
 typedef itm = irval
 //
@@ -460,7 +545,7 @@ implement
 xinterp_fprint_the_hdcstmap
   (out) =
 (
-  fprint_hashtbl(out, the_hdcstdef_map)
+fprint_hashtbl(out, the_hdcstdef_map)
 )
 *)
 
@@ -469,7 +554,20 @@ xinterp_fprint_the_hdcstmap
 implement
 the_hdcstdef_search
   (k0) =
+(
+case+ opt of
+|
+Some_vt _ => opt
+| ~
+None_vt _ =>
+the_hdctpdef_search(k0.sym())
+) where
+{
+val opt =
 hashtbl_search<key,itm>(the_hdcstdef_map, k0)
+} (* end of [the_hdcstdef_search] *)
+
+(* ****** ****** *)
 
 implement
 the_hdcstdef_insert
@@ -530,7 +628,7 @@ implement
 xinterp_fprint_the_hdvarmap
   (out) =
 (
-  fprint_hashtbl(out, the_hdvardef_map)
+fprint_hashtbl(out, the_hdvardef_map)
 )
 *)
 
@@ -607,16 +705,38 @@ end
 
 (* ****** ****** *)
 
+overload
+symbol with $SYM.symbol_make
+
+(* ****** ****** *)
+
 in(*in-of-local*)
 
-(*
+(* ****** ****** *)
+
 val () =
 the_hdctpdef_insert
 (
+symbol
 "XINTERP_gint_add_sint_sint"
 ,
 IRVfun(firfun2(gint_add_sint_sint)))
-*)
+
+val () =
+the_hdctpdef_insert
+(
+symbol
+"XINTERP_gint_sub_sint_sint"
+,
+IRVfun(firfun2(gint_sub_sint_sint)))
+
+val () =
+the_hdctpdef_insert
+(
+symbol
+"XINTERP_gint_mul_sint_sint"
+,
+IRVfun(firfun2(gint_mul_sint_sint)))
 
 (* ****** ****** *)
 
