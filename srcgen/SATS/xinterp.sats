@@ -52,18 +52,6 @@ abstype irenv_tbox = ptr
 typedef irenv = irenv_tbox
 
 (* ****** ****** *)
-//
-abstype irval_tbox = ptr
-typedef irval = irval_tbox
-//
-(*
-abstype irlazv_tbox = ptr
-typedef irlazv = irlazv_tbox
-abstype irlftv_tbox = ptr
-typedef irlftv = irlftv_tbox
-*)
-//
-(* ****** ****** *)
 typedef label = $LAB.label
 (* ****** ****** *)
 //
@@ -88,8 +76,7 @@ typedef h0dclist = $H0E.h0dclist
 typedef h0comped = $H0E.h0comped
 (* ****** ****** *)
 //
-datatype
-irval_node =
+datatype irval =
 //
 | IRVnil of ()
 //
@@ -166,29 +153,6 @@ and
 irvalopt = Option(irval)
 and
 irvalfun = (irvalist -<cloref1> irval)
-//
-(* ****** ****** *)
-//
-fun
-irval_nil(h0typ): irval
-fun
-irval_top(h0typ): irval
-//
-fun
-irval_make_node
-( h0t0: h0typ
-, node: irval_node): irval
-//
-(* ****** ****** *)
-//
-fun
-irval_get_type
-( irv0: irval ): h0typ
-overload .type with irval_get_type
-fun
-irval_get_node
-( irv0: irval ): irval_node
-overload .node with irval_get_node
 //
 (* ****** ****** *)
 //

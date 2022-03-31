@@ -97,8 +97,7 @@ fun
 auxmain
 (irv0: irval): void =
 (
-case+
-irv0.node() of
+case+ irv0 of
 //
 | IRVnil() =>
   fprint!(out, "IRVnil()")
@@ -125,6 +124,9 @@ irv0.node() of
   fprint!(out, "IRVlft(", lvl, ")")
 //
 |
+IRVfun(fopr) =>
+fprint!(out, "IRVfun(", "...", ")")
+|
 IRVlam0
 (args, h0e1) =>
 fprint!
@@ -150,6 +152,14 @@ fprint!
 ( out
 , "IRVfix1("
 , hdv0, "; ", args, "; ", h0e1, ")")
+//
+|
+IRVfixs
+(fenv, hdv0, hfas, h0e1, h0es) =>
+fprint!
+( out
+, "IRVfixs("
+, hdv0, "; ", hfas, "; ", h0e1, "; ", "...", ")")
 //
 |
 IRVtrcd1(knd0, irvs) =>

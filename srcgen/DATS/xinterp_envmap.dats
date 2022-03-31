@@ -556,4 +556,72 @@ end // end of [local]
 
 (* ****** ****** *)
 
+fun
+gint_add_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVint(x+y)
+end
+
+fun
+gint_sub_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVint(x-y)
+end
+
+fun
+gint_mul_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVint(x*y)
+end
+
+(* ****** ****** *)
+
+local
+
+(* ****** ****** *)
+
+fun
+firfun2
+(
+f2:
+( irval
+, irval) -> irval
+)
+: irvalist -<cloref1> irval =
+lam(vs) =>
+let
+val-
+list_cons(v1,vs) = vs
+val-
+list_cons(v2,vs) = vs in f2(v1, v2)
+end
+
+(* ****** ****** *)
+
+in(*in-of-local*)
+
+(*
+val () =
+the_hdctpdef_insert
+(
+"XINTERP_gint_add_sint_sint"
+,
+IRVfun(firfun2(gint_add_sint_sint)))
+*)
+
+(* ****** ****** *)
+
+end // end of [local]
+
+(* ****** ****** *)
+
 (* end of [xint_xinterp_envmap.dats] *)
