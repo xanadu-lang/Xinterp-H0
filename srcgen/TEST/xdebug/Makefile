@@ -17,6 +17,11 @@ fact01
 fact01: ; \
 $(XINTERP) -d ./fact01.dats
 ######
+test:: \
+fibo01
+fibo01: ; \
+$(XINTERP) -d ./fibo01.dats
+######
 
 ######
 #
