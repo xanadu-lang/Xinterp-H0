@@ -893,6 +893,7 @@ val
 irvs =
 auxdarg(env0, npf1, h0es)
 //
+(*
 val () =
 println!
 ("auxdapp: h0f0 = ", h0f0)
@@ -902,6 +903,7 @@ println!
 val () =
 println!
 ("auxdapp: irvs = ", irvs)
+*)
 //
 in
 //
@@ -1148,8 +1150,10 @@ H0Etrcd1 _ => auxtrcd1(env0, h0e0)
 _(*rest-of-h0exp*) => IRVnone1(h0e0)
 ) where
 {
+(*
 val () =
 println!("xinterp_h0exp: h0e0 = ", h0e0)
+*)
 } (*where*) // end of [xinterp_h0exp]
 //
 (* ****** ****** *)

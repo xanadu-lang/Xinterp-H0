@@ -374,9 +374,11 @@ IRVfix1
 ( fenv
 , hdv0, _, _) = irv0
 //
+(*
 val () =
 println!
 ("intenv_bind_fix: irv0 = ", irv0)
+*)
 //
 } (* end of [intenv_bind_fix] *)
 
