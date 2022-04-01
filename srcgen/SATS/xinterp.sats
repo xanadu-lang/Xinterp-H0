@@ -95,15 +95,19 @@ datatype irval =
 //
 | IRVfun of (irvalfun)
 //
+(*
 |
 IRVlam0 of
 (hfarglst, h0exp)
+*)
 |
 IRVlam1 of
 (irenv, hfarglst, h0exp)
+(*
 |
 IRVfix0 of
 ( hdvar, hfarglst, h0exp)
+*)
 |
 IRVfix1 of
 ( irenv
@@ -212,8 +216,11 @@ fun
 irenv_make_nil(): irenv
 fun
 intenv_make_nil(): intenv
+//
 fun
 intenv_free_nil(intenv): void
+fun
+intenv_free_irenv(intenv): void
 //
 (* ****** ****** *)
 //
@@ -269,6 +276,16 @@ HX: copying out the stack
 *)
 fun
 intenv_take_irenv(!intenv): irenv
+//
+(* ****** ****** *)
+//
+fun
+intenv_bind_fix
+(env: !intenv, irv: irval): void
+fun
+intenv_bind_fixs
+(env: !intenv, irv: irval): void
+//
 (* ****** ****** *)
 //
 fun

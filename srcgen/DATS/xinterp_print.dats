@@ -126,18 +126,21 @@ case+ irv0 of
 |
 IRVfun(fopr) =>
 fprint!(out, "IRVfun(", "...", ")")
+(*
 |
 IRVlam0
 (args, h0e1) =>
 fprint!
 ( out
 , "IRVlam1(", args, "; ", h0e1, ")")
+*)
 |
 IRVlam1
 (env0, args, h0e1) =>
 fprint!
 ( out
 , "IRVlam1(", args, "; ", h0e1, ")")
+(*
 |
 IRVfix0
 (hdv0, args, h0e1) =>
@@ -145,6 +148,7 @@ fprint!
 ( out
 , "IRVfix0("
 , hdv0, "; ", args, "; ", h0e1, ")")
+*)
 |
 IRVfix1
 (env0, hdv0, args, h0e1) =>

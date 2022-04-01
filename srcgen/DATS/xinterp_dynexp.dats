@@ -61,24 +61,6 @@ fprint_val<irval> = fprint_irval
 //
 extern
 fun
-xinterp_h0exp
-( env0:
-! intenv, h0e0: h0exp): irval
-extern
-fun
-xinterp_h0explst
-( env0:
-! intenv, h0es: h0explst): irvalist
-extern
-fun
-xinterp_h0expopt
-( env0:
-! intenv, opt0: h0expopt): irvalopt
-//
-(* ****** ****** *)
-//
-extern
-fun
 xinterp_h0pat_ck0
 (h0p0: h0pat, irv1: irval): bool
 extern
@@ -100,6 +82,51 @@ xinterp_h0patlst_ck1
 ! intenv
 , h0ps
 : h0patlst, irv1: irvalist): void
+//
+(* ****** ****** *)
+//
+extern
+fun
+xinterp_h0exp
+( env0:
+! intenv, h0e0: h0exp): irval
+extern
+fun
+xinterp_h0explst
+( env0:
+! intenv, h0es: h0explst): irvalist
+extern
+fun
+xinterp_h0expopt
+( env0:
+! intenv, opt0: h0expopt): irvalopt
+//
+(* ****** ****** *)
+//
+extern
+fun
+xinterp_h0exp_fun
+(env0: !intenv, h0e0: h0exp): irval
+//
+extern
+fun
+xinterp_h0exp_try0
+(env0: !intenv, h0e0: h0exp): irval
+//
+(* ****** ****** *)
+//
+extern
+fun
+xinterp_fcall_lam1
+(irf0: irval, irvs: irvalist): irval
+extern
+fun
+xinterp_fcall_fix1
+(irf0: irval, irvs: irvalist): irval
+extern
+fun
+xinterp_fcall_fixs
+(irf0: irval, irvs: irvalist): irval
 //
 (* ****** ****** *)
 
@@ -129,6 +156,19 @@ xinterp_hvardeclist
 
 (* ****** ****** *)
 
+extern
+fun
+xinterp_hfundecl
+( env0:
+! intenv, hfd0: hfundecl): void
+extern
+fun
+xinterp_hfundeclist
+( env0:
+! intenv, hfds: hfundeclist): void
+
+(* ****** ****** *)
+
 implement
 xinterp_program
   (p0kg) =
@@ -155,6 +195,191 @@ val () = intenv_free_nil(env0)
 in
   // nothing
 end // end of [xinterp_program]
+
+(* ****** ****** *)
+
+implement
+xinterp_h0pat_ck0
+  (h0p0, irv0) =
+let
+//
+(*
+val () =
+println!
+("xinterp_h0pat_ck0: h0p0 = ", h0p0)
+val () =
+println!
+("xinterp_h0pat_ck0: irv0 = ", irv0)
+*)
+//
+in
+//
+case-
+h0p0.node() of
+//
+|
+H0Pany _ => true
+|
+H0Pvar _ => true
+//
+|
+H0Pint(int1) =>
+(
+case- irv0 of
+|
+IRVint(int0) =>
+( int0=int1 ) where
+{
+val int1=token2dint(int1)
+}
+)
+|
+H0Pbtf(btf1) =>
+(
+case- irv0 of
+|
+IRVbtf(btf0) =>
+( btf0=btf1 ) where
+{
+val btf1=token2dbtf(btf1)
+}
+)
+|
+H0Pchr(chr1) =>
+(
+case- irv0 of
+|
+IRVchr(chr0) =>
+( chr0=chr1 ) where
+{
+val chr1=token2dchr(chr1)
+}
+)
+|
+H0Ptrcd1
+(knd0, npf1, h0ps) =>
+(
+case- irv0 of
+|
+IRVtrcd1(knd1, irvs) =>
+let
+//
+val () =
+assertloc(knd0=knd1)
+//
+val h0ps =
+(
+  auxtail(npf1, h0ps)
+) where
+{
+fun
+auxtail
+( npf1: int
+, h0ps
+: h0patlst): h0patlst =
+if
+npf1 <= 0
+then h0ps else
+(
+case- h0ps of
+| list_cons
+  (_, h0ps) =>
+  auxtail(npf1-1, h0ps)
+)
+} (*where*) // end-of-val
+in
+xinterp_h0patlst_ck0(h0ps, irvs)
+end
+) (* end of [H0Ptrcd1] *)
+//
+end (* [xinterp_h0pat_ck0] *)
+
+(* ****** ****** *)
+implement
+xinterp_h0patlst_ck0
+  (h0ps, irvs) =
+(
+case+ h0ps of
+|
+list_nil() => true
+|
+list_cons(h0p0, h0ps) =>
+let
+val-
+list_cons(irv0, irvs) = irvs
+val ans =
+xinterp_h0pat_ck0(h0p0, irv0)  
+in(*in-of-let*)
+//
+if ans
+then
+xinterp_h0patlst_ck0(h0ps, irvs)
+else false
+//
+end // end of [list_cons]
+) (* [xinterp_h0patlst_ck0] *)
+(* ****** ****** *)
+
+implement
+xinterp_h0pat_ck1
+(env0, h0p0, irv0) =
+let
+//
+(*
+val () =
+println!
+("xinterp_h0pat_ck1: h0p0 = ", h0p0)
+val () =
+println!
+("xinterp_h0pat_ck1: irv0 = ", irv0)
+*)
+//
+in
+//
+case-
+h0p0.node() of
+//
+|
+H0Pnil() =>
+(
+case- irv0 of
+|
+IRVnil() => ()
+)
+//
+|
+H0Pany() => ()
+//
+|
+H0Pvar(hdv0) =>
+{
+val () =
+xinterp_insert_hdvar
+( env0, hdv0, irv0 )
+} (* end of [H0Pvar] *)
+//
+end (* end of [xinterp_h0pat_ck1] *)
+
+(* ****** ****** *)
+
+implement
+xinterp_h0patlst_ck1
+  (env0, h0ps, irvs) =
+(
+case+ h0ps of
+|
+list_nil() => ()
+|
+list_cons(h0p0, h0ps) =>
+let
+val-
+list_cons(irv0, irvs) = irvs
+val () =
+xinterp_h0pat_ck1(env0, h0p0, irv0)  
+in
+xinterp_h0patlst_ck1(env0, h0ps, irvs)
+end // end of [list_cons]
+) (* end of [xinterp_h0patlst_ck1] *)
 
 (* ****** ****** *)
 
@@ -302,12 +527,7 @@ println!("auxkvar: x0 = ", x0)
 val
 opt =
 (
-if
-(k0 >= 0)
-then
-xinterp_search_hdvar(env0,x0)
-else
-xinterp_search_hdvtp(env0,x0)
+xinterp_search_hdvar(env0, x0)
 ) : Option_vt(irval)
 //
 in
@@ -440,7 +660,7 @@ let
 val h0e1 =
 h0exp_make_node
 (
-body.loc()
+rcd.loc
 ,
 nam.type((*void*))
 ,
@@ -690,7 +910,6 @@ case- irf0 of
 |
 IRVfun(fopr) => fopr(irvs)
 //
-(*
 |
 IRVlam1(_, _, _) =>
 xinterp_fcall_lam1(irf0, irvs)
@@ -700,7 +919,6 @@ xinterp_fcall_fix1(irf0, irvs)
 |
 IRVfixs(_, _, _, _, _) =>
 xinterp_fcall_fixs(irf0, irvs)
-*)
 //
 end (*let*) // end of [auxdapp]
 
@@ -974,188 +1192,217 @@ Some(xinterp_h0exp(env0, h0e0))
 ) (*case*) // end of [xinterp_h0expopt]
 
 (* ****** ****** *)
-
+//
 implement
-xinterp_h0pat_ck0
-  (h0p0, irv0) =
+xinterp_h0exp_fun
+  (env0, h0e0) =
 let
-//
-(*
-val () =
-println!
-("xinterp_h0pat_ck0: h0p0 = ", h0p0)
-val () =
-println!
-("xinterp_h0pat_ck0: irv0 = ", irv0)
-*)
-//
+val env0 =
+$UN.castvwtp1{ptr}(env0)
 in
-//
-case-
-h0p0.node() of
-//
-|
-H0Pany _ => true
-|
-H0Pvar _ => true
-//
-|
-H0Pint(int1) =>
-(
-case- irv0 of
-|
-IRVint(int0) =>
-( int0=int1 ) where
+try
+irv0 where
 {
-val int1=token2dint(int1)
+val
+env0 =
+$UN.castvwtp0{intenv}(env0)
+val
+irv0 = xinterp_h0exp(env0, h0e0)
+prval
+((*void*)) = $UN.cast2void(env0)
 }
-)
-|
-H0Pbtf(btf1) =>
-(
-case- irv0 of
-|
-IRVbtf(btf0) =>
-( btf0=btf1 ) where
-{
-val btf1=token2dbtf(btf1)
-}
-)
-|
-H0Pchr(chr1) =>
-(
-case- irv0 of
-|
-IRVchr(chr0) =>
-( chr0=chr1 ) where
-{
-val chr1=token2dchr(chr1)
-}
-)
-|
-H0Ptrcd1
-(knd0, npf1, h0ps) =>
-(
-case- irv0 of
-|
-IRVtrcd1(knd1, irvs) =>
+with exn =>
 let
+val
+env0 =
+$UN.castvwtp0{intenv}(env0)
+val () = intenv_free_irenv(env0) in $raise(exn)
+end
+end // end of [xinterp_h0exp_fun]
 //
-val () =
-assertloc(knd0=knd1)
-//
-val h0ps =
-(
-  auxtail(npf1, h0ps)
-) where
-{
+(* ****** ****** *)
+
+local
+
 fun
-auxtail
+auxnpf
 ( npf1: int
 , h0ps
 : h0patlst): h0patlst =
 if
-npf1 <= 0
-then h0ps else
-(
-case- h0ps of
-| list_cons
-  (_, h0ps) =>
-  auxtail(npf1-1, h0ps)
-)
-} (*where*) // end-of-val
-in
-xinterp_h0patlst_ck0(h0ps, irvs)
+(npf1 >= 1)
+then
+let
+val-
+list_cons
+(_, h0ps) = h0ps in auxnpf(npf1-1, h0ps)
 end
-) (* end of [H0Ptrcd1] *)
-//
-end (*end*) // end of [xinterp_h0pat_ck0]
+else h0ps // end of [if]
 
-(* ****** ****** *)
+in(*in-of-local*)
+
 implement
-xinterp_h0patlst_ck0
-  (h0ps, irvs) =
-(
-case+ h0ps of
-|
-list_nil() => true
-|
-list_cons(h0p0, h0ps) =>
+xinterp_fcall_lam1
+  (h0f0, irvs) =
 let
 val-
-list_cons(irv0, irvs) = irvs
-val ans =
-xinterp_h0pat_ck0(h0p0, irv0)  
-in(*in-of-let*)
-//
-if ans
-then xinterp_h0patlst_ck0(h0ps, irvs)
-else false
-//
-end // end of [list_cons]
-) (*case*)//end of [xinterp_h0patlst_ck0]
-(* ****** ****** *)
-
-implement
-xinterp_h0pat_ck1
-(env0, h0p0, irv0) =
+IRVlam1
+( fenv
+, hfas, body) = h0f0
+val env0 =
+intenv_make_irenv(fenv)
+in
 let
 //
-(*
+val-
+list_cons
+(hfa0, hfas) = hfas
+val-
+HFARGnpats
+(npf1, h0ps) = hfa0.node()
+//
+val
+h0ps = auxnpf( npf1, h0ps )
+//
 val () =
-println!
-("xinterp_h0pat_ck1: h0p0 = ", h0p0)
-val () =
-println!
-("xinterp_h0pat_ck1: irv0 = ", irv0)
-*)
+xinterp_h0patlst_ck1(env0, h0ps, irvs)
 //
-in
-//
-case-
-h0p0.node() of
-//
-|
-H0Pnil() =>
+val irv0 =
 (
-case- irv0 of
+case+ hfas of
 |
-IRVnil() => ()
-)
-//
-|
-H0Pany() => ()
-//
-|
-H0Pvar(hdv0) =>
+list_nil() =>
+( irv0 ) where
 {
-val () =
-xinterp_insert_hdvar
-( env0, hdv0, irv0 )
-} (* end of [H0Pvar] *)
+  val irv0 =
+  xinterp_h0exp_fun(env0, body)
+}
+|
+list_cons _ =>
+(
+  IRVlam1(fenv, hfas, body)
+) where
+{
+  val fenv = intenv_take_irenv(env0)
+}
+) : irval // end of [val]
 //
-end (*end*) // end of [xinterp_h0pat_ck1]
+in
+let
+val () = intenv_free_irenv(env0) in irv0
+end
+end // end of [let]
+//
+end // end of [xinterp_fcall_lam]
 
 (* ****** ****** *)
 
 implement
-xinterp_h0patlst_ck1
-  (env0, h0ps, irvs) =
-(
-case+ h0ps of
-|
-list_nil() => ()
-|
-list_cons(h0p0, h0ps) =>
+xinterp_fcall_fix1
+  (irf0, irvs) =
 let
 val-
-list_cons(irv0, irvs) = irvs
-val () =
-xinterp_h0pat_ck1(env0, h0p0, irv0)  
+IRVfix1
+( fenv
+, hdv0
+, hfas, body) = irf0
+val env0 =
+intenv_make_irenv(fenv)
+val ((*void*)) =
+intenv_bind_fix(env0, irf0)
 in
-  xinterp_h0patlst_ck1(env0, h0ps, irvs)
-end // end of [list_cons]
-) (*case*) // end of [xinterp_h0patlst_ck1]
+let
+val-
+list_cons
+(hfa0, hfas) = hfas
+val-
+HFARGnpats
+(npf1, h0ps) = hfa0.node()
+val
+h0ps = auxnpf( npf1, h0ps )
+val () =
+xinterp_h0patlst_ck1(env0, h0ps, irvs)
+val irv0 =
+(
+case+ hfas of
+| list_nil _ =>
+  ( irv0 ) where
+  {
+    val irv0 =
+    xinterp_h0exp_fun(env0, body)
+  }
+| list_cons _ =>
+  (
+  IRVlam1(fenv, hfas, body)
+  ) where
+  {
+    val fenv = intenv_take_irenv(env0)
+  }
+) : irval // end of [val]
+in
+let
+val () = intenv_free_irenv(env0) in irv0
+end
+end // end of [let]
+//
+end // end of [xinterp_fcall_fix]
+
+(* ****** ****** *)
+
+implement
+xinterp_fcall_fixs
+  (irf0, irvs) =
+let
+val-
+IRVfixs
+( fenv
+, hdv0
+, hfas
+, body, hdfs) = irf0
+//
+val env0 =
+intenv_make_irenv(fenv)
+val ((*void*)) =
+intenv_bind_fixs(env0, irf0)
+//
+in
+let
+val-
+list_cons
+(hfa0, hfas) = hfas
+val-
+HFARGnpats
+(npf1, h0ps) = hfa0.node()
+val
+h0ps = auxnpf( npf1, h0ps )
+val () =
+xinterp_h0patlst_ck1(env0, h0ps, irvs)
+val irv0 =
+(
+case+ hfas of
+| list_nil _ =>
+  ( irv0 ) where
+  {
+    val irv0 =
+    xinterp_h0exp_fun(env0, body)
+  }
+| list_cons _ =>
+  (
+  IRVlam1(fenv, hfas, body)
+  ) where
+  {
+    val fenv = intenv_take_irenv(env0)
+  }
+) : irval // end of [val]
+in
+let
+val () = intenv_free_irenv(env0) in irv0
+end
+end // end of [let]
+//
+end // end of [xinterp_fcall_fixs]
+
+end // end of [local]
 
 (* ****** ****** *)
 
@@ -1221,6 +1468,34 @@ end // end of [aux_vardecl]
 
 (* ****** ****** *)
 
+fun
+aux_fundecl
+( env0:
+! intenv
+, dcl0: h0dcl): void =
+let
+val-
+H0Cfundecl
+( knd
+, mopt
+, tqas
+, hfds) = dcl0.node()
+//
+val
+istmp = list_is_cons(tqas)
+in
+//
+if
+istmp
+then
+((*nothing*))
+else
+xinterp_hfundeclist(env0, hfds)
+//
+end // end of [aux_fundecl]
+
+(* ****** ****** *)
+
 in(*in-of-local*)
 
 implement
@@ -1233,6 +1508,14 @@ dcl0.node() of
 |
 H0Cvaldecl _ =>
 aux_valdecl(env0, dcl0)
+//
+|
+H0Cvardecl _ =>
+aux_vardecl(env0, dcl0)
+//
+|
+H0Cfundecl _ =>
+aux_fundecl(env0, dcl0)
 //
 | _ (*rest-of-h0dcl*) => ()
 //
@@ -1366,6 +1649,299 @@ list_cons(x0, xs) =>
 val () = xinterp_hvardecl(env0, x0)
 }
 ) (*case*) // end of [xinterp_hvardeclist]
+
+(* ****** ****** *)
+
+implement
+xinterp_hfundecl
+(env0, hfd0) =
+let
+//
+val+
+HFUNDECL
+  (rcd) = hfd0
+//
+val nam = rcd.nam
+val hdc = rcd.hdc
+val hag = rcd.hag
+val def = rcd.def
+//
+in
+//
+case+ hag of
+|
+None() => ()
+|
+Some(hfas) =>
+(
+case+ def of
+|
+None() => ()
+|
+Some(body) =>
+(
+case+ hfas of
+|
+list_nil _ =>
+let
+val irv0 =
+(
+case-
+body.node() of
+|
+H0Elam
+(knd, hfas, body) =>
+let
+val fenv =
+intenv_take_irenv(env0)
+in
+IRVfix1(fenv, nam, hfas, body)
+end // end of [H0Elam]
+//
+) : irval // end of [let]
+in
+xinterp_insert_hdcst(env0, hdc, irv0)
+end
+|
+list_cons _ =>
+let
+val fenv =
+intenv_take_irenv(env0)
+val irv0 =
+IRVfix1(fenv, nam, hfas, body)
+in
+xinterp_insert_hdcst(env0, hdc, irv0)
+end
+) (* end of [Some(body)] *)
+) (* end of [Some(hfas)] *)
+//
+end // end of [xinterp_hfundecl]
+
+(* ****** ****** *)
+
+local
+
+fun
+auxfixs
+(
+hfds
+:
+hfundeclist
+) : h0explst =
+(
+case+
+hfds of
+|
+list_nil() =>
+list_nil()
+|
+list_cons
+(hfd0, hfds) =>
+let
+val+
+HFUNDECL
+  (rcd) = hfd0
+//
+val nam = rcd.nam
+val hdc = rcd.hdc
+val hag = rcd.hag
+val def = rcd.def
+//
+in
+//
+case+ hag of
+|
+None() =>
+auxfixs(hfds)
+|
+Some(hfas) =>
+(
+case+ def of
+|
+None() =>
+auxfixs(hfds)
+|
+Some(body) =>
+(
+case+ hfas of
+|
+list_nil _ =>
+(
+case+
+body.node() of
+|
+H0Elam
+(knd, hfas, h0e2) =>
+let
+val h0e1 =
+h0exp_make_node
+(
+rcd.loc
+,
+nam.type((*void*))
+,
+H0Efix(knd, nam, hfas, h0e2)
+) (* end of [val] *)
+in
+list_cons(h0e1, auxfixs(hfds))
+end // end of [H0Elam]
+//
+| _(*rest-of-h0exp*) =>
+  list_cons(body, auxfixs(hfds))
+)
+|
+list_cons _ =>
+let
+val
+loc = rcd.loc
+val
+knd =
+token_make_node
+(loc, T_FIX(1))
+val h0e1 =
+h0exp_make_node
+(
+loc
+,
+nam.type((*void*))
+,
+H0Efix
+(knd, nam, hfas, body)
+) (* end of [val] *)
+in
+  list_cons(h0e1, auxfixs(hfds))
+end 
+) (* end of [Some(body)] *)
+) (* end of [Some(hfas)] *)
+//
+end (* end of [list_cons] *) ) (*auxfixs*)
+
+fun
+auxhfds
+( env0:
+! intenv
+, fenv
+: irenv
+, hdfs
+: h0explst
+, hfds
+: hfundeclist
+) : void =
+(
+case+
+hfds of
+|
+list_nil() => ()
+|
+list_cons
+(hfd0, hfds) =>
+let
+val+
+HFUNDECL
+  (rcd) = hfd0
+//
+val nam = rcd.nam
+val hdc = rcd.hdc
+val hag = rcd.hag
+val def = rcd.def
+//
+in
+//
+case+ hag of
+|
+None() => ()
+|
+Some(hfas) =>
+(
+case+ def of
+|
+None() => ()
+|
+Some(body) =>
+(
+case+ hfas of
+|
+list_nil _ =>
+let
+val irv0 =
+(
+case-
+body.node() of
+|
+H0Elam
+(knd, hfas, body) =>
+IRVfixs
+(fenv, nam, hfas, body, hdfs)
+(*
+|
+H0Efix
+(knd, hdv, hfas, h0e2) =>
+IRVfixs
+(fenv, nam, hfas, h0e2, hdfs)
+*)
+//
+) : irval // end-of-let
+in
+(
+auxhfds(env0, fenv, hdfs, hfds)
+) where
+{
+val () =
+xinterp_insert_hdcst(env0, hdc, irv0)
+}
+end
+|
+list_cons _ =>
+let
+val irv0 =
+IRVfixs
+(fenv, nam, hfas, body, hdfs)
+in
+(
+auxhfds(env0, fenv, hdfs, hfds)
+) where
+{
+val () =
+xinterp_insert_hdcst(env0, hdc, irv0)
+}
+end
+) (* end of [Some(body)] *)
+) (* end of [Some(hfas)] *)
+//
+end (* end of [list_cons] *) ) (* auxhfds *)
+
+in (*in-of-local*)
+
+implement
+xinterp_hfundeclist
+(env0, hfds) =
+(
+case+ hfds of
+|
+list_nil() => ()
+|
+list_cons(x0, xs) =>
+(
+case+ xs of
+|
+list_nil _ =>
+xinterp_hfundecl(env0, x0)
+|
+list_cons _ =>
+let
+//
+  val fenv =
+  intenv_take_irenv(env0)
+//
+  val hdfs = auxfixs(hfds)
+//
+in
+  auxhfds(env0, fenv, hdfs, hfds)
+end
+) (* end of [list_cons] *)
+) (* xinterp_hfundeclist *)
+
+end // end of [local]
 
 (* ****** ****** *)
 

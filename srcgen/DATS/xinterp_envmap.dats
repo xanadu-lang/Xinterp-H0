@@ -85,8 +85,6 @@ fun
 the_hdctpdef_insert
 (k0: sym_t, def: irval): void
 //
-(* ****** ****** *)
-//
 extern
 fun
 the_hdcstdef_search
@@ -95,6 +93,8 @@ extern
 fun
 the_hdcstdef_insert
 (k0: hdcst, def: irval): void
+//
+(* ****** ****** *)
 //
 extern
 fun
@@ -149,6 +149,68 @@ absimpl intenv_vtbox = intenv
 in(*in-of-local*)
 
 (* ****** ****** *)
+//
+fun
+print_intstk
+(stk: !intstk): void =
+fprint_intstk(stdout_ref, stk)
+and
+prerr_intstk
+(stk: !intstk): void =
+fprint_intstk(stderr_ref, stk)
+//
+and
+fprint_intstk
+( out: FILEref
+, stk: !intstk): void =
+(
+case+ stk of
+|
+intstk_nil() =>
+(
+  fprintln!(out, "intstk_nil()")
+)
+|
+intstk_fun() =>
+(
+  fprintln!(out, "intstk_fun()")
+)
+//
+|
+intstk_let1(stk) =>
+(
+fprint_intstk(out, stk)
+) where
+{
+val () =
+fprintln!(out, "intstk_let1(...)")
+}
+|
+intstk_try1(stk) =>
+(
+fprint_intstk(out, stk)
+) where
+{
+val () =
+fprintln!(out, "intstk_try1(...)")
+}
+//
+|
+intstk_cons
+( h0k, irv, stk ) =>
+(
+fprint_intstk(out, stk)
+) where
+{
+val () =
+fprintln!(out, "intstk_cons(...)")
+}
+) (* end of [fprint_intstk] *)
+
+overload print with print_intstk
+overload prerr with prerr_intstk
+
+(* ****** ****** *)
 implement
 irenv_make_nil
 ((*void*)) = list_nil()
@@ -171,6 +233,33 @@ val+~INTENV(l0, xs) = env0
 (* ****** ****** *)
 //
 implement
+intenv_free_irenv
+  (env) =
+let
+val+
+~INTENV
+ (l0, xs) = env in auxstk(xs)
+end where
+{
+//
+fun
+auxstk
+(xs: intstk): void =
+(
+case- xs of
+|
+~intstk_fun() => ()
+|
+~intstk_let1(xs) => auxstk(xs)
+|
+~intstk_cons(_, _, xs) => auxstk(xs)
+)
+//
+} (* end of [intenv_free_irenv] *)
+//
+(* ****** ****** *)
+//
+implement
 intenv_make_irenv
   ( kxs ) = let
 //
@@ -178,13 +267,13 @@ fun
 intstk_make_irenv
 (kxs: irenv): intstk =
 (
-auxlst
+auxstk
 (kxs, intstk_fun())
 ) where
 {
 //
 fun
-auxlst
+auxstk
 ( kxs: irenv
 , env: intstk): intstk =
 (
@@ -194,13 +283,13 @@ list_nil() => env
 |
 list_cons(kx0, kxs) =>
 (
-  auxlst(kxs, env)
+  auxstk(kxs, env)
 ) where
 {
   val env =
   intstk_cons(kx0.0, kx0.1, env)
 }
-) (* end of [auxlst] *)
+) (* end of [auxstk] *)
 //
 } (* end of [intstk_make_irenv] *)
 in
@@ -239,19 +328,25 @@ auxenv
 (
 case+ env of
 //
-| intstk_nil() => res
-| intstk_fun() => res
+|
+intstk_nil() => res
+|
+intstk_fun() => res
 //
-| intstk_let1
-    (env) => auxenv(env, res)
-| intstk_try1
-    (env) => auxenv(env, res)
+|
+intstk_let1
+  (env) => auxenv(env, res)
+|
+intstk_try1
+  (env) => auxenv(env, res)
 //
 (*
-| intstk_loc1
-    (env) => auxenv(env, res)
-| intstk_loc2
-    (env) => auxenv(env, res)
+|
+intstk_loc1
+  (env) => auxenv(env, res)
+|
+intstk_loc2
+  (env) => auxenv(env, res)
 *)
 //
 |
@@ -267,9 +362,81 @@ intstk_cons(k0, x0, env) =>
 (* ****** ****** *)
 
 implement
+intenv_bind_fix
+  (env0, irv0) =
+(
+xinterp_insert_hdvar
+( env0, hdv0, irv0 )
+) where
+{
+val-
+IRVfix1
+( fenv
+, hdv0, _, _) = irv0
+//
+val () =
+println!
+("intenv_bind_fix: irv0 = ", irv0)
+//
+} (* end of [intenv_bind_fix] *)
+
+(* ****** ****** *)
+
+implement
+intenv_bind_fixs
+  (env0, irv0) =
+(
+auxhdfs(env0, hdfs)
+) where
+{
+//
+val-
+IRVfixs
+( fenv
+, hdv0, hfas
+, body, hdfs) = irv0
+//
+fun
+auxhdfs
+( env0:
+! intenv
+, h0es
+: h0explst): void =
+(
+case+ h0es of
+|
+list_nil
+((*void*)) => ()
+|
+list_cons
+(h0e1, h0es) =>
+(
+  auxhdfs(env0, h0es)
+) where
+{
+  val () =
+  xinterp_insert_hdvar
+  ( env0, hdv1, irv1 )
+  } where
+  {
+  val-
+  H0Efix
+  ( knd1, hdv1
+  , hfas, body) = h0e1.node()
+  val irv1 =
+  IRVfixs
+  (fenv, hdv1, hfas, body, hdfs)
+}
+) (* end of [auxhdfs] *)
+//
+} (* end of [intenv_bind_fixs] *)
+
+(* ****** ****** *)
+
+implement
 xinterp_search_hdcst
   (env0, hdc0) =
-  (auxlst(xs)) where
+  (auxstk(xs)) where
 {
 //
 vtypedef
@@ -277,7 +444,7 @@ res = Option_vt(irval)
 val+INTENV(l0, xs) = env0
 //
 fun
-auxlst
+auxstk
 (xs: !intstk): res =
 (
 case+ xs of
@@ -286,12 +453,12 @@ case+ xs of
 | intstk_fun() =>
   the_hdcstdef_search(hdc0)
 //
-| intstk_let1(xs) => auxlst(xs)
-| intstk_try1(xs) => auxlst(xs)
+| intstk_let1(xs) => auxstk(xs)
+| intstk_try1(xs) => auxstk(xs)
 //
 (*
-| intplst_loc1(xs) => auxlst(xs)
-| intplst_loc2(xs) => auxlst(xs)
+| intplst_loc1(xs) => auxstk(xs)
+| intplst_loc2(xs) => auxstk(xs)
 *)
 | intstk_cons
   (h0k1, irv1, xs) =>
@@ -300,12 +467,46 @@ case+ xs of
   | H0Kcst(hdc1) =>
     if
     (hdc0 = hdc1)
-    then Some_vt(irv1) else auxlst(xs)
-  | H0Kvar(hdv1) => auxlst(xs)
+    then Some_vt(irv1) else auxstk(xs)
+  | H0Kvar(hdv1) => auxstk(xs)
   )
-) (* end of [auxlst] *)
+) (* end of [auxstk] *)
 //
 } (* end of [xinterp_search_hdcst] *)
+
+(* ****** ****** *)
+
+implement
+xinterp_insert_hdcst
+  (env0, hdc0, irv0) =
+let
+//
+val+
+@INTENV(l0, xs) = env0
+//
+in
+//
+case xs of
+|
+intstk_nil() =>
+(
+fold@(env0);
+the_hdcstdef_insert(hdc0, irv0)
+)
+|
+_(*non-intstk_nil*) =>
+(
+fold@(env0);
+) where
+{
+val () =
+(
+xs :=
+intstk_cons(H0Kcst(hdc0), irv0, xs)
+)
+} (* non-intplst_nil *)
+//
+end // end of [xinterp_insert_hdcst]
 
 (* ****** ****** *)
 //
@@ -322,7 +523,7 @@ implement
 xinterp_search_hdvar
   (env0, hdv0) =
 (
-  auxlst(xs)) where
+  auxstk(xs)) where
 {
 //
 vtypedef
@@ -330,7 +531,7 @@ res = Option_vt(irval)
 val+INTENV(l0, xs) = env0
 //
 fun
-auxlst
+auxstk
 (xs: !intstk): res =
 (
 case+ xs of
@@ -342,28 +543,28 @@ intstk_fun() =>
 the_hdvardef_search(hdv0)
 //
 |
-intstk_let1(xs) => auxlst(xs)
+intstk_let1(xs) => auxstk(xs)
 |
-intstk_try1(xs) => auxlst(xs)
+intstk_try1(xs) => auxstk(xs)
 //
 (*
 |
-intplst_loc1(xs) => auxlst(xs)
+intplst_loc1(xs) => auxstk(xs)
 |
-intplst_loc2(xs) => auxlst(xs)
+intplst_loc2(xs) => auxstk(xs)
 *)
 |
 intstk_cons
 (h0k1, irv1, xs) =>
 (
 case+ h0k1 of
-| H0Kcst(hdc1) => auxlst(xs)
+| H0Kcst(hdc1) => auxstk(xs)
 | H0Kvar(hdv1) =>
   if
   (hdv0 = hdv1)
-  then Some_vt(irv1) else auxlst(xs)
+  then Some_vt(irv1) else auxstk(xs)
 )
-) (* end of [auxlst] *)
+) (* end of [auxstk] *)
 //
 } (* end of [xinterp_search_hdvar] *)
 
@@ -376,6 +577,23 @@ let
 //
 val+
 @INTENV(l0, xs) = env0
+//
+(*
+val () =
+println!
+("xinterp_insert_hdvar: hdv0 = ", hdv0)
+val () =
+println!
+("xinterp_insert_hdvar: irv0 = ", irv0)
+*)
+(*
+val () =
+println!
+("xinterp_insert_hdvar: env0: l0 = ", l0)
+val () =
+println!
+("xinterp_insert_hdvar: env0: xs = ", xs)
+*)
 //
 in
 //
@@ -655,12 +873,47 @@ end // end of [local]
 (* ****** ****** *)
 
 fun
+gint_lt_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVbtf(x < y)
+end
+fun
+gint_gt_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVbtf(x > y)
+end
+fun
+gint_lte_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVbtf(x <= y)
+end
+fun
+gint_gte_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVbtf(x >= y)
+end
+
+(* ****** ****** *)
+
+fun
 gint_add_sint_sint
 ( x: irval
 , y: irval): irval =
 let
 val-IRVint(x) = x
-val-IRVint(y) = y in IRVint(x+y)
+val-IRVint(y) = y in IRVint(x + y)
 end
 
 fun
@@ -669,7 +922,7 @@ gint_sub_sint_sint
 , y: irval): irval =
 let
 val-IRVint(x) = x
-val-IRVint(y) = y in IRVint(x-y)
+val-IRVint(y) = y in IRVint(x - y)
 end
 
 fun
@@ -678,7 +931,16 @@ gint_mul_sint_sint
 , y: irval): irval =
 let
 val-IRVint(x) = x
-val-IRVint(y) = y in IRVint(x*y)
+val-IRVint(y) = y in IRVint(x * y)
+end
+
+fun
+gint_div_sint_sint
+( x: irval
+, y: irval): irval =
+let
+val-IRVint(x) = x
+val-IRVint(y) = y in IRVint(x / y)
 end
 
 (* ****** ****** *)
@@ -718,6 +980,40 @@ val () =
 the_hdctpdef_insert
 (
 symbol
+"XINTERP_gint_lt_sint_sint"
+,
+IRVfun(firfun2(gint_lt_sint_sint)))
+
+val () =
+the_hdctpdef_insert
+(
+symbol
+"XINTERP_gint_gt_sint_sint"
+,
+IRVfun(firfun2(gint_gt_sint_sint)))
+
+val () =
+the_hdctpdef_insert
+(
+symbol
+"XINTERP_gint_lte_sint_sint"
+,
+IRVfun(firfun2(gint_lte_sint_sint)))
+
+val () =
+the_hdctpdef_insert
+(
+symbol
+"XINTERP_gint_gte_sint_sint"
+,
+IRVfun(firfun2(gint_gte_sint_sint)))
+
+(* ****** ****** *)
+
+val () =
+the_hdctpdef_insert
+(
+symbol
 "XINTERP_gint_add_sint_sint"
 ,
 IRVfun(firfun2(gint_add_sint_sint)))
@@ -737,6 +1033,14 @@ symbol
 "XINTERP_gint_mul_sint_sint"
 ,
 IRVfun(firfun2(gint_mul_sint_sint)))
+
+val () =
+the_hdctpdef_insert
+(
+symbol
+"XINTERP_gint_div_sint_sint"
+,
+IRVfun(firfun2(gint_div_sint_sint)))
 
 (* ****** ****** *)
 
