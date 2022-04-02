@@ -224,6 +224,7 @@ implement
 intenv_free_nil
   (env0) =
 {
+val-0(*top*) = l0
 val-~intstk_nil() = xs
 } where
 {
@@ -234,12 +235,13 @@ val+~INTENV(l0, xs) = env0
 //
 implement
 intenv_free_irenv
-  (env) =
-let
-val+
-~INTENV
- (l0, xs) = env in auxstk(xs)
-end where
+  (env0) =
+(
+  auxstk(xs)
+) where
+{
+  val-1(*fun*) = l0
+} where
 {
 //
 fun
@@ -254,6 +256,8 @@ case- xs of
 |
 ~intstk_cons(_, _, xs) => auxstk(xs)
 )
+//
+val+~INTENV(l0, xs) = env0
 //
 } (* end of [intenv_free_irenv] *)
 //
