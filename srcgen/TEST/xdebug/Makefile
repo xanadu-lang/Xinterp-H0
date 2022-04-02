@@ -25,6 +25,10 @@ test:: \
 fibo01
 fibo01: ; \
 $(XINTERP) -d ./fibo01.dats
+test:: \
+fibo02
+fibo02: ; \
+$(XINTERP) -d ./fibo02.dats
 ######
 
 ######
