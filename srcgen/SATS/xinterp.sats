@@ -289,6 +289,13 @@ intenv_bind_fixs
 (* ****** ****** *)
 //
 fun
+intenv_pop0_let1( !intenv ): void
+fun
+intenv_push_let1( !intenv ): void
+//
+(* ****** ****** *)
+//
+fun
 the_XATSHOME_get((*void*)): string
 //
 (* ****** ****** *)

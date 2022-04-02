@@ -436,6 +436,46 @@ list_cons
 (* ****** ****** *)
 
 implement
+intenv_pop0_let1
+  (env0) =
+(
+  fold@(env0)
+) where
+{
+//
+fun
+auxlst
+( xs
+: intstk): intstk =
+(
+case- xs of
+| ~intstk_let1
+   (xs) => xs
+| ~intstk_cons
+   (_, _, xs) => auxlst(xs)
+)
+//
+val-
+@INTENV(l0, xs) = env0
+val () = (xs := auxlst(xs))
+} // end of [intenv_push_let1] *)
+
+implement
+intenv_push_let1
+  (env0) =
+(
+  fold@(env0)
+) where
+{
+val-
+@INTENV(l0, xs) = env0
+val () =
+(xs := intstk_let1(xs))
+} // end of [intenv_push_let1] *)
+
+(* ****** ****** *)
+
+implement
 xinterp_search_hdcst
   (env0, hdc0) =
   (auxstk(xs)) where
@@ -459,8 +499,8 @@ case+ xs of
 | intstk_try1(xs) => auxstk(xs)
 //
 (*
-| intplst_loc1(xs) => auxstk(xs)
-| intplst_loc2(xs) => auxstk(xs)
+| intstk_loc1(xs) => auxstk(xs)
+| intstk_loc2(xs) => auxstk(xs)
 *)
 | intstk_cons
   (h0k1, irv1, xs) =>
@@ -506,7 +546,7 @@ val () =
 xs :=
 intstk_cons(H0Kcst(hdc0), irv0, xs)
 )
-} (* non-intplst_nil *)
+} (* non-intstk_nil *)
 //
 end // end of [xinterp_insert_hdcst]
 
@@ -551,9 +591,9 @@ intstk_try1(xs) => auxstk(xs)
 //
 (*
 |
-intplst_loc1(xs) => auxstk(xs)
+intstk_loc1(xs) => auxstk(xs)
 |
-intplst_loc2(xs) => auxstk(xs)
+intstk_loc2(xs) => auxstk(xs)
 *)
 |
 intstk_cons
@@ -607,7 +647,7 @@ fold@(env0);
 the_hdvardef_insert(hdv0, irv0)
 )
 |
-_(*non-intplst_nil*) =>
+_(*non-intstk_nil*) =>
 (
 fold@(env0)
 ) where
@@ -617,7 +657,7 @@ val () =
 xs :=
 intstk_cons(H0Kvar(hdv0), irv0, xs)
 )
-} (* non-intplst_nil *)
+} (* non-intstk_nil *)
 //
 end // end of [xinterp_insert_hdvar]
 

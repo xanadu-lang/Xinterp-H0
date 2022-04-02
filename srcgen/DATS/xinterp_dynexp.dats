@@ -967,7 +967,37 @@ end // end of [else]
 (* ****** ****** *)
 
 fun
-auxlam
+aux_let
+( env0:
+! intenv
+, h0e0
+: h0exp): irval =
+let
+//
+val-
+H0Elet
+( dcls
+, h0e1) = h0e0.node()
+//
+val () =
+intenv_push_let1(env0)
+//
+val () =
+xinterp_h0dclist(env0, dcls)
+//
+val
+irv0 = xinterp_h0exp(env0, h0e1)
+//
+in
+let
+val () =
+intenv_pop0_let1(env0) in irv0 end
+end // end of [aux_let]
+
+(* ****** ****** *)
+
+fun
+aux_lam
 ( env0:
 ! intenv
 , h0e0: h0exp): irval =
@@ -986,7 +1016,7 @@ IRVlam1(fenv, args, body)
 end
 
 fun
-auxfix
+aux_fix
 ( env0:
 ! intenv
 , h0e0: h0exp): irval =
@@ -1138,8 +1168,10 @@ H0Etimp _ => auxtimp(env0, h0e0)
 |
 H0Edapp _ => auxdapp(env0, h0e0)
 //
-| H0Elam _ => auxlam(env0, h0e0)
-| H0Efix _ => auxfix(env0, h0e0)
+| H0Elet _ => aux_let(env0, h0e0)
+//
+| H0Elam _ => aux_lam(env0, h0e0)
+| H0Efix _ => aux_fix(env0, h0e0)
 //
 | H0Eift1 _ => auxift1(env0, h0e0)
 //
