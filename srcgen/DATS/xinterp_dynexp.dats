@@ -1613,8 +1613,8 @@ case+ def of
 |
 None() => ()
 |
-Some(h0v) =>
-xinterp_h0pat_ck1(env0, pat, h0v)
+Some(h0e) =>
+xinterp_h0pat_ck1(env0, pat, h0e)
 //
 end (*let*) // end of [xinterp_hvaldecl]
 
