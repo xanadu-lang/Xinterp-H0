@@ -42,7 +42,7 @@ UN =
 //
 (* ****** ****** *)
 #include
-"./../HATS/libxatsopt.hats"
+"./../HATS/libxinterp.hats"
 (* ****** ****** *)
 //
 #staload
@@ -54,6 +54,11 @@ UN =
 //
 #staload "./../SATS/xinterp.sats"
 //
+(* ****** ****** *)
+
+#symload
+fprint with $LAB.fprint_label
+
 (* ****** ****** *)
 //
 implement

@@ -38,6 +38,9 @@ XATSOPT_targetloc
 #staload S2E =
   "{$XATSOPT}/SATS/staexp2.sats"
 (* ****** ****** *)
+#staload TRS01 =
+  "{$XATSOPT}/SATS/trans01.sats"
+(* ****** ****** *)
 #staload TRD33 =
   "{$XATSOPT}/SATS/tread33.sats"
 #staload TRD3X =

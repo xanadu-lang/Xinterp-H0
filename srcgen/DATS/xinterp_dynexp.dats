@@ -43,8 +43,21 @@ UN =
 (* ****** ****** *)
 //
 #include
-"./../HATS/libxatsopt.hats"
+"./../HATS/libxinterp.hats"
 //
+(* ****** ****** *)
+staload $LEX(*open-package*)
+(* ****** ****** *)
+#symload
+token2dint with $TRS01.token2dint
+#symload
+token2dbtf with $TRS01.token2dbtf
+#symload
+token2dchr with $TRS01.token2dchr
+#symload
+token2dflt with $TRS01.token2dflt
+#symload
+token2dstr with $TRS01.token2dstr
 (* ****** ****** *)
 //
 #staload
