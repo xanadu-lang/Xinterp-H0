@@ -88,31 +88,31 @@ the_hdctpdef_insert
 extern
 fun
 the_hdcstdef_search
-(k0: hdcst): Option_vt(irval)
+(k0: h0cst): Option_vt(irval)
 extern
 fun
 the_hdcstdef_insert
-(k0: hdcst, def: irval): void
+(k0: h0cst, def: irval): void
 //
 (* ****** ****** *)
 //
 extern
 fun
 the_hdvardef_search
-(k0: hdvar): Option_vt(irval)
+(k0: h0var): Option_vt(irval)
 extern
 fun
 the_hdvardef_insert
-(k0: hdvar, def: irval): void
+(k0: h0var, def: irval): void
 //
 (* ****** ****** *)
 //
 datatype
 h0key =
 |
-H0Kcst of hdcst // let-fun
+H0Kcst of h0cst // let-fun
 |
-H0Kvar of hdvar // arg and let-var
+H0Kvar of h0var // arg and let-var
 //
 (* ****** ****** *)
 
@@ -480,7 +480,7 @@ val () =
 (* ****** ****** *)
 
 implement
-xinterp_search_hdcst
+xinterp_search_h0cst
   (env0, hdc0) =
   (auxstk(xs)) where
 {
@@ -523,7 +523,7 @@ case+ xs of
 (* ****** ****** *)
 
 implement
-xinterp_insert_hdcst
+xinterp_insert_h0cst
   (env0, hdc0, irv0) =
 let
 //
@@ -557,7 +557,7 @@ end // end of [xinterp_insert_hdcst]
 (* ****** ****** *)
 //
 implement
-xinterp_search_hdvtp
+xinterp_search_h0vtp
   (env0, hdv0) =
 (
 the_hdvardef_search(hdv0)
@@ -566,7 +566,7 @@ the_hdvardef_search(hdv0)
 (* ****** ****** *)
 
 implement
-xinterp_search_hdvar
+xinterp_search_h0var
   (env0, hdv0) =
 (
   auxstk(xs)) where
@@ -767,7 +767,7 @@ end // end of [local]
 
 local
 //
-typedef key = hdcst
+typedef key = h0cst
 typedef itm = irval
 //
 #define HDCSTMAPSZ 1024
@@ -850,7 +850,7 @@ end // end of [local]
 
 local
 //
-typedef key = hdvar
+typedef key = h0var
 typedef itm = irval
 //
 #define HDVARMAPSZ 1024

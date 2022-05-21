@@ -147,12 +147,12 @@ extern
 fun
 xinterp_hvaldecl
 ( env0:
-! intenv, hvd0: hvaldecl): void
+! intenv, hvd0: h0valdecl): void
 extern
 fun
 xinterp_hvaldeclist
 ( env0:
-! intenv, hvds: hvaldeclist): void
+! intenv, hvds: h0valdeclist): void
 
 (* ****** ****** *)
 
@@ -160,12 +160,12 @@ extern
 fun
 xinterp_hvardecl
 ( env0:
-! intenv, hvd0: hvardecl): void
+! intenv, hvd0: h0vardecl): void
 extern
 fun
 xinterp_hvardeclist
 ( env0:
-! intenv, hvds: hvardeclist): void
+! intenv, hvds: h0vardeclist): void
 
 (* ****** ****** *)
 
@@ -173,12 +173,12 @@ extern
 fun
 xinterp_hfundecl
 ( env0:
-! intenv, hfd0: hfundecl): void
+! intenv, hfd0: h0fundecl): void
 extern
 fun
 xinterp_hfundeclist
 ( env0:
-! intenv, hfds: hfundeclist): void
+! intenv, hfds: h0fundeclist): void
 
 (* ****** ****** *)
 
@@ -512,7 +512,7 @@ println!("auxvar: x0 = ", x0)
 //
 val
 opt =
-xinterp_search_hdvar(env0,x0)
+xinterp_search_h0var(env0,x0)
 //
 in
 case-
@@ -540,7 +540,7 @@ println!("auxkvar: x0 = ", x0)
 val
 opt =
 (
-xinterp_search_hdvar(env0, x0)
+xinterp_search_h0var(env0, x0)
 ) : Option_vt(irval)
 //
 in
@@ -570,7 +570,7 @@ H0Efcst(hdc) = h0e0.node()
 in
 //
 if
-hdcst_fcastq(hdc)
+h0cst_fcastq(hdc)
 then
 IRVfun
 (
@@ -588,7 +588,7 @@ opt of ~Some_vt(irf) => irf
 {
 val
 opt =
-xinterp_search_hdcst(env0, hdc)
+xinterp_search_h0cst(env0, hdc)
 } (* end of [else] *)
 //
 end // end of [auxfcst]
@@ -623,7 +623,7 @@ auxfixs
 (
 hfds
 :
-hfundeclist
+h0fundeclist
 ) : h0explst =
 (
 case+
@@ -636,7 +636,7 @@ list_cons
 (hfd0, hfds) =>
 let
 val+
-HFUNDECL
+H0FUNDECL
   (rcd) = hfd0
 //
 val nam = rcd.nam
@@ -718,11 +718,11 @@ auxhfd0
 ( fenv
 : irenv
 , hfd0
-: hfundecl): irval =
+: h0fundecl): irval =
 let
 //
 val-
-HFUNDECL
+H0FUNDECL
   (rcd) = hfd0
 //
 val nam = rcd.nam
@@ -758,7 +758,7 @@ auxhfds
 , hdfs
 : h0explst
 , hfds
-: hfundeclist
+: h0fundeclist
 ) : irval =
 (
 case-
@@ -773,7 +773,7 @@ list_cons
 (hfd0, hfds) =>
 let
 val+
-HFUNDECL
+H0FUNDECL
   (rcd) = hfd0
 in
 //
@@ -1307,7 +1307,7 @@ val-
 list_cons
 (hfa0, hfas) = hfas
 val-
-HFARGnpats
+H0FARGnpats
 (npf1, h0ps) = hfa0.node()
 //
 val
@@ -1365,7 +1365,7 @@ val-
 list_cons
 (hfa0, hfas) = hfas
 val-
-HFARGnpats
+H0FARGnpats
 (npf1, h0ps) = hfa0.node()
 val
 h0ps = auxnpf( npf1, h0ps )
@@ -1420,7 +1420,7 @@ val-
 list_cons
 (hfa0, hfas) = hfas
 val-
-HFARGnpats
+H0FARGnpats
 (npf1, h0ps) = hfa0.node()
 val
 h0ps = auxnpf( npf1, h0ps )
@@ -1607,7 +1607,7 @@ xinterp_hvaldecl
 let
 //
 val+
-HVALDECL
+H0VALDECL
 ( rcd ) = x0
 //
 val pat = rcd.pat
@@ -1656,7 +1656,7 @@ xinterp_hvardecl
 let
 //
 val+
-HVARDECL(rcd) = x0
+H0VARDECL(rcd) = x0
 //
 val hdv = rcd.hdv
 val ini = rcd.ini
@@ -1707,7 +1707,7 @@ xinterp_hfundecl
 let
 //
 val+
-HFUNDECL
+H0FUNDECL
   (rcd) = hfd0
 //
 val nam = rcd.nam
@@ -1749,7 +1749,7 @@ end // end of [H0Elam]
 //
 ) : irval // end of [let]
 in
-xinterp_insert_hdcst(env0, hdc, irv0)
+xinterp_insert_h0cst(env0, hdc, irv0)
 end
 |
 list_cons _ =>
@@ -1759,7 +1759,7 @@ intenv_take_irenv(env0)
 val irv0 =
 IRVfix1(fenv, nam, hfas, body)
 in
-xinterp_insert_hdcst(env0, hdc, irv0)
+xinterp_insert_h0cst(env0, hdc, irv0)
 end
 ) (* end of [Some(body)] *)
 ) (* end of [Some(hfas)] *)
@@ -1775,7 +1775,7 @@ auxfixs
 (
 hfds
 :
-hfundeclist
+h0fundeclist
 ) : h0explst =
 (
 case+
@@ -1788,7 +1788,7 @@ list_cons
 (hfd0, hfds) =>
 let
 val+
-HFUNDECL
+H0FUNDECL
   (rcd) = hfd0
 //
 val nam = rcd.nam
@@ -1874,7 +1874,7 @@ auxhfds
 , hdfs
 : h0explst
 , hfds
-: hfundeclist
+: h0fundeclist
 ) : void =
 (
 case+
@@ -1886,7 +1886,7 @@ list_cons
 (hfd0, hfds) =>
 let
 val+
-HFUNDECL
+H0FUNDECL
   (rcd) = hfd0
 //
 val nam = rcd.nam
@@ -1936,7 +1936,7 @@ auxhfds(env0, fenv, hdfs, hfds)
 ) where
 {
 val () =
-xinterp_insert_hdcst(env0, hdc, irv0)
+xinterp_insert_h0cst(env0, hdc, irv0)
 }
 end
 |
@@ -1951,7 +1951,7 @@ auxhfds(env0, fenv, hdfs, hfds)
 ) where
 {
 val () =
-xinterp_insert_hdcst(env0, hdc, irv0)
+xinterp_insert_h0cst(env0, hdc, irv0)
 }
 end
 ) (* end of [Some(body)] *)

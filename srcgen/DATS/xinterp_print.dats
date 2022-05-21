@@ -67,11 +67,11 @@ fprint_val<irval> = fprint_irval
 (* ****** ****** *)
 //
 implement
-fprint_val<hdcst> = fprint_hdcst
+fprint_val<h0cst> = fprint_h0cst
 implement
-fprint_val<hdcon> = fprint_hdcon
+fprint_val<h0con> = fprint_h0con
 implement
-fprint_val<hdvar> = fprint_hdvar
+fprint_val<h0var> = fprint_h0var
 //
 (* ****** ****** *)
 //
@@ -79,8 +79,11 @@ implement
 fprint_val<h0pat> = fprint_h0pat
 implement
 fprint_val<h0exp> = fprint_h0exp
+//
+(* ****** ****** *)
+//
 implement
-fprint_val<hfarg> = fprint_hfarg
+fprint_val<h0farg> = fprint_h0farg
 //
 (* ****** ****** *)
 //

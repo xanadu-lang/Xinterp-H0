@@ -59,20 +59,22 @@ typedef h0typ = $H0E.h0typ
 //
 (* ****** ****** *)
 //
-typedef hdcon = $H0E.hdcon
-typedef hdcst = $H0E.hdcst
-typedef hdvar = $H0E.hdvar
+typedef h0con = $H0E.h0con
+typedef h0cst = $H0E.h0cst
+typedef h0var = $H0E.h0var
 //
 typedef h0pat = $H0E.h0pat
 typedef h0patlst = $H0E.h0patlst
-typedef hfarg = $H0E.hfarg
-typedef hfarglst = $H0E.hfarglst
 //
 typedef h0exp = $H0E.h0exp
 typedef h0explst = $H0E.h0explst
 typedef h0dcl = $H0E.h0dcl
 typedef h0dclist = $H0E.h0dclist
 //
+(* ****** ****** *)
+typedef h0farg = $H0E.h0farg
+typedef h0farglst = $H0E.h0farglst
+(* ****** ****** *)
 typedef h0comped = $H0E.h0comped
 (* ****** ****** *)
 //
@@ -102,21 +104,21 @@ IRVlam0 of
 *)
 |
 IRVlam1 of
-(irenv, hfarglst, h0exp)
+(irenv, h0farglst, h0exp)
 (*
 |
 IRVfix0 of
-( hdvar, hfarglst, h0exp)
+( h0var, hfarglst, h0exp)
 *)
 |
 IRVfix1 of
 ( irenv
-, hdvar, hfarglst, h0exp)
+, h0var, h0farglst, h0exp)
 |
 IRVfixs of
 ( irenv
-, hdvar(*f*)
-, hfarglst, h0exp, h0explst)
+, h0var(*f*)
+, h0farglst, h0exp, h0explst)
 //
 |
 IRVtrcd1 of
@@ -225,35 +227,35 @@ intenv_free_irenv(intenv): void
 (* ****** ****** *)
 //
 fun
-xinterp_search_hdcst
+xinterp_search_h0cst
 ( env:
 ! intenv
-, hdc: hdcst): Option_vt(irval)
+, hdc: h0cst): Option_vt(irval)
 //
 fun
-xinterp_search_hdvtp
+xinterp_search_h0var
 ( env:
 ! intenv
-, hdv: hdvar): Option_vt(irval)
+, hdv: h0var): Option_vt(irval)
 fun
-xinterp_search_hdvar
+xinterp_search_h0vtp
 ( env:
 ! intenv
-, hdv: hdvar): Option_vt(irval)
+, hdv: h0var): Option_vt(irval)
 //
 (* ****** ****** *)
 //
 fun
-xinterp_insert_hdcst
+xinterp_insert_h0cst
 ( env:
 ! intenv
-, hdc: hdcst, irv: irval): void
+, hdc: h0cst, irv: irval): void
 //
 fun
 xinterp_insert_hdvar
 ( env:
 ! intenv
-, hdv: hdvar, irv: irval): void
+, hdv: h0var, irv: irval): void
 //
 (* ****** ****** *)
 //
