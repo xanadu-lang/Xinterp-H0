@@ -818,7 +818,7 @@ in
 case-
 h0cl.node() of
 |
-H0Cfundecl
+H0Cfundclst
 ( knd0, mopt
 , tqas, hfds) =>
 let
@@ -847,7 +847,7 @@ end
 //
 end
 |
-H0Cimpldcl3
+H0Cimplmnt3
 ( knd0, mopt
 , sqas, tqas
 , hdc1, ti3a, hfas, body
@@ -1484,47 +1484,47 @@ end // end of [aux_include]
 (* ****** ****** *)
 
 fun
-aux_valdecl
+aux_valdclst
 ( env0:
 ! intenv
 , dcl0: h0dcl): void =
 let
 val-
-H0Cvaldecl
+H0Cvaldclst
 ( knd0
 , mopt
 , hvds) = dcl0.node()
 in
 xinterp_hvaldeclist(env0, hvds)
-end // end of [aux_valdecl]
+end // end of [aux_valdclst]
 
 (* ****** ****** *)
 
 fun
-aux_vardecl
+aux_vardclst
 ( env0:
 ! intenv
 , dcl0: h0dcl): void =
 let
 val-
-H0Cvardecl
+H0Cvardclst
 ( knd0
 , mopt
 , hvds) = dcl0.node()
 in
 xinterp_hvardeclist(env0, hvds)
-end // end of [aux_vardecl]
+end // end of [aux_vardclst]
 
 (* ****** ****** *)
 
 fun
-aux_fundecl
+aux_fundclst
 ( env0:
 ! intenv
 , dcl0: h0dcl): void =
 let
 val-
-H0Cfundecl
+H0Cfundclst
 ( knd
 , mopt
 , tqas
@@ -1541,7 +1541,7 @@ then
 else
 xinterp_hfundeclist(env0, hfds)
 //
-end // end of [aux_fundecl]
+end // end of [aux_fundclst]
 
 (* ****** ****** *)
 
@@ -1555,16 +1555,16 @@ case+
 dcl0.node() of
 //
 |
-H0Cvaldecl _ =>
-aux_valdecl(env0, dcl0)
+H0Cvaldclst _ =>
+aux_valdclst(env0, dcl0)
 //
 |
-H0Cvardecl _ =>
-aux_vardecl(env0, dcl0)
+H0Cvardclst _ =>
+aux_vardclst(env0, dcl0)
 //
 |
-H0Cfundecl _ =>
-aux_fundecl(env0, dcl0)
+H0Cfundclst _ =>
+aux_fundclst(env0, dcl0)
 //
 | _ (*rest-of-h0dcl*) => ()
 //
