@@ -847,7 +847,7 @@ end
 //
 end
 |
-H0Cimpdecl3
+H0Cimpldcl3
 ( knd0, mopt
 , sqas, tqas
 , hdc1, ti3a, hfas, body
