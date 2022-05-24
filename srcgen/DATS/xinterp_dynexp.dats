@@ -641,17 +641,17 @@ H0FUNDECL
 //
 val nam = rcd.nam
 val hdc = rcd.hdc
-val hag = rcd.hag
+val hfg = rcd.hfg
 val def = rcd.def
 //
 in
 //
-case+ hag of
+case+ hfg of
 |
 None() =>
 auxfixs(hfds)
 |
-Some(hfas) =>
+Some(hfgs) =>
 (
 case+ def of
 |
@@ -660,7 +660,7 @@ auxfixs(hfds)
 |
 Some(body) =>
 (
-case+ hfas of
+case+ hfgs of
 |
 list_nil _ =>
 (
@@ -668,7 +668,7 @@ case+
 body.node() of
 |
 H0Elam
-(knd, hfas, h0e2) =>
+(knd, hfgs, h0e2) =>
 let
 val h0e1 =
 h0exp_make_node
@@ -677,7 +677,7 @@ rcd.loc
 ,
 nam.type((*void*))
 ,
-H0Efix(knd, nam, hfas, h0e2)
+H0Efix(knd, nam, hfgs, h0e2)
 ) (* end of [val] *)
 in
 list_cons(h0e1, auxfixs(hfds))
@@ -703,13 +703,13 @@ loc
 ,
 nam.type()
 ,
-H0Efix(knd, nam, hfas, body)
+H0Efix(knd, nam, hfgs, body)
 ) (* end of [val] *)
 in
   list_cons(h0e1, auxfixs(hfds))
 end 
 ) (* end of [Some(body)] *)
-) (* end of [Some(hfas)] *)
+) (* end of [Some(hfgs)] *)
 //
 end (* end of [list_cons] *) ) (*auxfixs*)
 //
@@ -728,13 +728,13 @@ H0FUNDECL
 val nam = rcd.nam
 //
 val-
-Some(hfas) = rcd.hag
+Some(hfgs) = rcd.hfg
 val-
 Some(body) = rcd.def
 //
 in
 //
-case+ hfas of
+case+ hfgs of
 |
 list_nil _ =>
 (
@@ -742,12 +742,12 @@ case-
 body.node() of
 |
 H0Elam
-(knd, hfas, hexp) =>
-IRVfix1(fenv, nam, hfas, hexp)
+(knd, hfgs, hexp) =>
+IRVfix1(fenv, nam, hfgs, hexp)
 )
 |
 list_cons _ =>
-IRVfix1(fenv, nam, hfas, body)
+IRVfix1(fenv, nam, hfgs, body)
 //
 end // end of [auxhfd0]
 //
@@ -784,28 +784,28 @@ then let
 val nam = rcd.nam
 //
 val-
-Some(hfas) = rcd.hag
+Some(hfgs) = rcd.hfg
 val-
 Some(body) = rcd.def
 //
 in
 //
 case+
-hfas of
+hfgs of
 |
 list_nil() =>
 (
 case-
 body.node() of
 H0Elam
-(knd, hfas, body) =>
+(knd, hfgs, body) =>
 IRVfixs
-(fenv, nam, hfas, body, hdfs)
+(fenv, nam, hfgs, body, hdfs)
 ) (* end of [list_nil] *)
 |
 list_cons _ =>
 IRVfixs
-(fenv, nam, hfas, body, hdfs)
+(fenv, nam, hfgs, body, hdfs)
 //
 end // end of [then]
 else auxhfds(fenv, hdfs, hfds)
@@ -850,11 +850,11 @@ end
 H0Cimplmnt3
 ( knd0, mopt
 , sqas, tqas
-, hdc1, ti3a, hfas, body
+, hdc1, ti3a, hfgs, body
 ) =>
 (
 //
-case+ hfas of
+case+ hfgs of
 |
 list_nil _ =>
 xinterp_h0exp(env0, body)
@@ -865,7 +865,7 @@ val
 fenv =
 intenv_take_irenv(env0)
 in
-IRVlam1(fenv, hfas, body)
+IRVlam1(fenv, hfgs, body)
 end
 //
 ) (* IRCimpdecl3 *)
@@ -1297,7 +1297,7 @@ let
 val-
 IRVlam1
 ( fenv
-, hfas, body) = h0f0
+, hfgs, body) = h0f0
 val env0 =
 intenv_make_irenv(fenv)
 in
@@ -1305,10 +1305,10 @@ let
 //
 val-
 list_cons
-(hfa0, hfas) = hfas
+(hfg0, hfgs) = hfgs
 val-
-H0FARGnpats
-(npf1, h0ps) = hfa0.node()
+H0FAGnpats
+(npf1, h0ps) = hfg0.node()
 //
 val
 h0ps = auxnpf( npf1, h0ps )
@@ -1318,7 +1318,7 @@ xinterp_h0patlst_ck1(env0, h0ps, irvs)
 //
 val irv0 =
 (
-case+ hfas of
+case+ hfgs of
 |
 list_nil() =>
 ( irv0 ) where
@@ -1329,7 +1329,7 @@ list_nil() =>
 |
 list_cons _ =>
 (
-  IRVlam1(fenv, hfas, body)
+  IRVlam1(fenv, hfgs, body)
 ) where
 {
   val fenv = intenv_take_irenv(env0)
@@ -1354,7 +1354,7 @@ val-
 IRVfix1
 ( fenv
 , hdv0
-, hfas, body) = irf0
+, hfgs, body) = irf0
 val env0 =
 intenv_make_irenv(fenv)
 val ((*void*)) =
@@ -1363,17 +1363,17 @@ in
 let
 val-
 list_cons
-(hfa0, hfas) = hfas
+(hfg0, hfgs) = hfgs
 val-
-H0FARGnpats
-(npf1, h0ps) = hfa0.node()
+H0FAGnpats
+(npf1, h0ps) = hfg0.node()
 val
 h0ps = auxnpf( npf1, h0ps )
 val () =
 xinterp_h0patlst_ck1(env0, h0ps, irvs)
 val irv0 =
 (
-case+ hfas of
+case+ hfgs of
 | list_nil _ =>
   ( irv0 ) where
   {
@@ -1382,7 +1382,7 @@ case+ hfas of
   }
 | list_cons _ =>
   (
-  IRVlam1(fenv, hfas, body)
+  IRVlam1(fenv, hfgs, body)
   ) where
   {
     val fenv = intenv_take_irenv(env0)
@@ -1406,7 +1406,7 @@ val-
 IRVfixs
 ( fenv
 , hdv0
-, hfas
+, hfgs
 , body, hdfs) = irf0
 //
 val env0 =
@@ -1418,17 +1418,17 @@ in
 let
 val-
 list_cons
-(hfa0, hfas) = hfas
+(hfg0, hfgs) = hfgs
 val-
-H0FARGnpats
-(npf1, h0ps) = hfa0.node()
+H0FAGnpats
+(npf1, h0ps) = hfg0.node()
 val
 h0ps = auxnpf( npf1, h0ps )
 val () =
 xinterp_h0patlst_ck1(env0, h0ps, irvs)
 val irv0 =
 (
-case+ hfas of
+case+ hfgs of
 | list_nil _ =>
   ( irv0 ) where
   {
@@ -1437,7 +1437,7 @@ case+ hfas of
   }
 | list_cons _ =>
   (
-  IRVlam1(fenv, hfas, body)
+  IRVlam1(fenv, hfgs, body)
   ) where
   {
     val fenv = intenv_take_irenv(env0)
@@ -1712,16 +1712,16 @@ H0FUNDECL
 //
 val nam = rcd.nam
 val hdc = rcd.hdc
-val hag = rcd.hag
+val hfg = rcd.hfg
 val def = rcd.def
 //
 in
 //
-case+ hag of
+case+ hfg of
 |
 None() => ()
 |
-Some(hfas) =>
+Some(hfgs) =>
 (
 case+ def of
 |
@@ -1729,7 +1729,7 @@ None() => ()
 |
 Some(body) =>
 (
-case+ hfas of
+case+ hfgs of
 |
 list_nil _ =>
 let
@@ -1739,12 +1739,12 @@ case-
 body.node() of
 |
 H0Elam
-(knd, hfas, body) =>
+(knd, hfgs, body) =>
 let
 val fenv =
 intenv_take_irenv(env0)
 in
-IRVfix1(fenv, nam, hfas, body)
+IRVfix1(fenv, nam, hfgs, body)
 end // end of [H0Elam]
 //
 ) : irval // end of [let]
@@ -1757,12 +1757,12 @@ let
 val fenv =
 intenv_take_irenv(env0)
 val irv0 =
-IRVfix1(fenv, nam, hfas, body)
+IRVfix1(fenv, nam, hfgs, body)
 in
 xinterp_insert_h0cst(env0, hdc, irv0)
 end
 ) (* end of [Some(body)] *)
-) (* end of [Some(hfas)] *)
+) (* end of [Some(hfgs)] *)
 //
 end // end of [xinterp_hfundecl]
 
@@ -1793,17 +1793,17 @@ H0FUNDECL
 //
 val nam = rcd.nam
 val hdc = rcd.hdc
-val hag = rcd.hag
+val hfg = rcd.hfg
 val def = rcd.def
 //
 in
 //
-case+ hag of
+case+ hfg of
 |
 None() =>
 auxfixs(hfds)
 |
-Some(hfas) =>
+Some(hfgs) =>
 (
 case+ def of
 |
@@ -1812,7 +1812,7 @@ auxfixs(hfds)
 |
 Some(body) =>
 (
-case+ hfas of
+case+ hfgs of
 |
 list_nil _ =>
 (
@@ -1820,7 +1820,7 @@ case+
 body.node() of
 |
 H0Elam
-(knd, hfas, h0e2) =>
+(knd, hfgs, h0e2) =>
 let
 val h0e1 =
 h0exp_make_node
@@ -1829,7 +1829,7 @@ rcd.loc
 ,
 nam.type((*void*))
 ,
-H0Efix(knd, nam, hfas, h0e2)
+H0Efix(knd, nam, hfgs, h0e2)
 ) (* end of [val] *)
 in
 list_cons(h0e1, auxfixs(hfds))
@@ -1855,13 +1855,13 @@ loc
 nam.type((*void*))
 ,
 H0Efix
-(knd, nam, hfas, body)
+(knd, nam, hfgs, body)
 ) (* end of [val] *)
 in
   list_cons(h0e1, auxfixs(hfds))
 end 
 ) (* end of [Some(body)] *)
-) (* end of [Some(hfas)] *)
+) (* end of [Some(hfgs)] *)
 //
 end (* end of [list_cons] *) ) (*auxfixs*)
 
@@ -1891,16 +1891,16 @@ H0FUNDECL
 //
 val nam = rcd.nam
 val hdc = rcd.hdc
-val hag = rcd.hag
+val hfg = rcd.hfg
 val def = rcd.def
 //
 in
 //
-case+ hag of
+case+ hfg of
 |
 None() => ()
 |
-Some(hfas) =>
+Some(hfgs) =>
 (
 case+ def of
 |
@@ -1908,7 +1908,7 @@ None() => ()
 |
 Some(body) =>
 (
-case+ hfas of
+case+ hfgs of
 |
 list_nil _ =>
 let
@@ -1918,15 +1918,15 @@ case-
 body.node() of
 |
 H0Elam
-(knd, hfas, body) =>
+(knd, hfgs, body) =>
 IRVfixs
-(fenv, nam, hfas, body, hdfs)
+(fenv, nam, hfgs, body, hdfs)
 (*
 |
 H0Efix
-(knd, hdv, hfas, h0e2) =>
+(knd, hdv, hfgs, h0e2) =>
 IRVfixs
-(fenv, nam, hfas, h0e2, hdfs)
+(fenv, nam, hfgs, h0e2, hdfs)
 *)
 //
 ) : irval // end-of-let
@@ -1944,7 +1944,7 @@ list_cons _ =>
 let
 val irv0 =
 IRVfixs
-(fenv, nam, hfas, body, hdfs)
+(fenv, nam, hfgs, body, hdfs)
 in
 (
 auxhfds(env0, fenv, hdfs, hfds)
@@ -1955,7 +1955,7 @@ xinterp_insert_h0cst(env0, hdc, irv0)
 }
 end
 ) (* end of [Some(body)] *)
-) (* end of [Some(hfas)] *)
+) (* end of [Some(hfgs)] *)
 //
 end (* end of [list_cons] *) ) (* auxhfds *)
 

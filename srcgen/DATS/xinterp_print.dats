@@ -78,12 +78,12 @@ fprint_val<h0var> = fprint_h0var
 implement
 fprint_val<h0pat> = fprint_h0pat
 implement
-fprint_val<h0exp> = fprint_h0exp
+fprint_val<h0fag> = fprint_h0fag
 //
 (* ****** ****** *)
 //
 implement
-fprint_val<h0farg> = fprint_h0farg
+fprint_val<h0exp> = fprint_h0exp
 //
 (* ****** ****** *)
 //

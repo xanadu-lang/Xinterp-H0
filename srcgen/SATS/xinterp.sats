@@ -65,15 +65,15 @@ typedef h0var = $H0E.h0var
 //
 typedef h0pat = $H0E.h0pat
 typedef h0patlst = $H0E.h0patlst
+typedef h0fag = $H0E.h0fag
+typedef h0faglst = $H0E.h0faglst
+(* ****** ****** *)
 //
 typedef h0exp = $H0E.h0exp
 typedef h0explst = $H0E.h0explst
 typedef h0dcl = $H0E.h0dcl
 typedef h0dclist = $H0E.h0dclist
 //
-(* ****** ****** *)
-typedef h0farg = $H0E.h0farg
-typedef h0farglst = $H0E.h0farglst
 (* ****** ****** *)
 typedef h0comped = $H0E.h0comped
 (* ****** ****** *)
@@ -104,7 +104,7 @@ IRVlam0 of
 *)
 |
 IRVlam1 of
-(irenv, h0farglst, h0exp)
+(irenv, h0faglst, h0exp)
 (*
 |
 IRVfix0 of
@@ -113,12 +113,12 @@ IRVfix0 of
 |
 IRVfix1 of
 ( irenv
-, h0var, h0farglst, h0exp)
+, h0var, h0faglst, h0exp)
 |
 IRVfixs of
 ( irenv
 , h0var(*f*)
-, h0farglst, h0exp, h0explst)
+, h0faglst, h0exp, h0explst)
 //
 |
 IRVtrcd1 of
