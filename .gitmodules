@@ -1,6 +1,0 @@
-[submodule "xatsopt"]
-	path = xatsopt
-	url = https://github.com/xanadu-lang/xatsopt.git
-[submodule "MODULE/xatsopt"]
-	path = MODULE/xatsopt
-	url = https://github.com/xanadu-lang/xatsopt.git
