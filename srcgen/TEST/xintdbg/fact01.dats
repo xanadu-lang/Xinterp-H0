@@ -5,7 +5,7 @@ Sat Feb 19 14:33:31 EST 2022
 (* ****** ****** *)
 #staload _ =
 "prelude\
-/DATS/CATS/Xint/basics.dats"
+/DATS/CATS/Xint/basics0.dats"
 (* ****** ****** *)
 
 fun
