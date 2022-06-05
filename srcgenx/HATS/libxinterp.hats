@@ -3,7 +3,7 @@
 #define
 XATSOPT_targetloc
 "./../..\
-/modules/xatsopt/srcgen"
+/modules/xatsopt/srcgenx"
 
 (* ****** ****** *)
 #staload STM =

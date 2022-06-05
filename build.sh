@@ -8,7 +8,7 @@
 ######
 
 make_all() {
-    make -C srcgen all
+    make -C srcgenx all
 }
 
 ######
@@ -18,8 +18,8 @@ make_all() {
 ######
 
 clone_xatsopt() {
-    if [ ! -d xatsopt/srcgen ]; then
-	git clone https://github.com/xanadu-lang/xatsopt.git
+    if [ ! -d modules/xatsopt ]; then
+	(cd modules; git clone https://github.com/xanadu-lang/xatsopt.git)
     fi
 }
 
