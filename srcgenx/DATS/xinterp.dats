@@ -52,9 +52,9 @@ UN =
 //
 (* ****** ****** *)
 #dynload
-"./../DATS/xinterp_main0.dats"
+"./../DATS/xinterp_mymain.dats"
 #dynload
-"./../DATS/xinterp_print.dats"
+"./../DATS/xinterp_print0.dats"
 #dynload
 "./../DATS/xinterp_envmap.dats"
 #dynload

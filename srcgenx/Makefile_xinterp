@@ -42,8 +42,8 @@ SRCSATS := \
 xinterp.sats \
 
 SRCDATS := \
-xinterp_main0.dats \
-xinterp_print.dats \
+xinterp_mymain.dats \
+xinterp_print0.dats \
 xinterp_envmap.dats \
 xinterp_dynexp.dats \
 
@@ -128,6 +128,7 @@ clean:: ; $(RMF) xinterp_dats.c
 ######
 
 cleanall:: clean
+cleanall:: ; $(RMF) ./.depend
 cleanall:: ; $(RMF) ./../bin/xinterp
 cleanall:: ; $(RMF) ./../bin/xinterp.sh
 cleanall:: ; $(RMF) $(XATSOPT)/lib/libxatsopt.a

@@ -1256,4 +1256,4 @@ end // end of [local]
 
 (* ****** ****** *)
 
-(* end of [xats_xinterp_main0.dats] *)
+(* end of [xats_xinterp_mymain.dats] *)
