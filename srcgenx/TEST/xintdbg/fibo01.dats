@@ -4,7 +4,8 @@ Fri Apr  1 14:33:16 EDT 2022
 *)
 (* ****** ****** *)
 #staload _ =
-"prelude\
+"srcgen1\
+/prelude\
 /DATS/CATS/Xint/basics0.dats"
 (* ****** ****** *)
 
